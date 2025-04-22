@@ -1,0 +1,45 @@
+<!-- === stats.html === -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Player Stats</title>
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />  
+</head>
+<body>
+  <header>
+    <h1>Player Stats</h1>
+    <nav>
+      <a href="index.html">Mystery</a> |
+      <a href="past.html">Past Mysteries</a> |
+      <a href="lore.html">Lore & Codex</a> |
+      <a href="stats.html">Stats</a>
+    </nav>
+  </header>
+
+  <main>
+    <section id="auth-section" class="card">
+      <h2>Login</h2>
+      <input type="email" id="email" placeholder="Email" />
+      <input type="password" id="password" placeholder="Password" />
+      <button id="login-btn">Log In</button>
+      <button id="signup-btn">Sign Up</button>
+      <p id="auth-error" style="color: #822E2B;"></p>
+    </section>
+
+    <section id="stats-container" class="card" style="display: none;">
+      <p><strong>Streak:</strong> <span id="streak">0</span> days</p>
+      <p><strong>Correct Guesses:</strong> <span id="correct">0</span></p>
+      <p><strong>Incorrect Guesses:</strong> <span id="incorrect">0</span></p>
+      <p><strong>Lore Pages Read:</strong> <span id="lore-read">0</span></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; Rhystic Games 2025</p>
+  </footer>
+  <script type="module" src="stats.js"></script>
+</body>
+</html>

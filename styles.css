@@ -1,0 +1,79 @@
+body {
+  background-color: #F7F0E0;
+  color: #66401A;
+  font-family: 'IM Fell English', serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+header, footer {
+  text-align: center;
+  background-color: #822E2B;
+  color: #F7F0E0;
+  padding: 1rem;
+}
+nav a {
+  color: #F7F0E0;
+  margin: 0 0.5rem;
+  text-decoration: none;
+}
+main {
+  padding: 2rem;
+  max-width: 800px;
+  margin: auto;
+}
+.card {
+  background: #fff8e1;
+  border: 2px solid #66401A;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+.premium {
+  background-color: #822E2B;
+  color: #F7F0E0;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+.premium button {
+  margin-top: 1rem;
+  background-color: #F7F0E0;
+  color: #822E2B;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.ad-left, .ad-right {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  background: #e0d5be;
+  color: #822E2B;
+  text-align: center;
+  padding-top: 1rem;
+  font-weight: bold;
+  font-family: 'IM Fell English', serif;
+  z-index: 1000;
+}
+.ad-left { left: 0; }
+.ad-right { right: 0; }
+.ad-bottom {
+  width: 100%;
+  background: #e0d5be;
+  color: #822E2B;
+  text-align: center;
+  padding: 0.75rem;
+  font-weight: bold;
+  font-family: 'IM Fell English', serif;
+  margin-top: 2rem;
+}
+@media screen and (max-width: 768px) {
+  .ad-left, .ad-right { display: none; }
+  main { margin-left: auto; margin-right: auto; }
+}
