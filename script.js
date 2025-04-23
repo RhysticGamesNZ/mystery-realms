@@ -25,14 +25,22 @@ function getQueryDateRange(dateStr) {
 async function loadTodayMystery() {
   let q;
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const docId = urlParams.get("id");
-  if (docId) {
-    // Load by ID for past mysteries
-    const docRef = doc(db, "mysteries", docId);
-    const docSnap = await getDoc(docRef);
-    if (!docSnap.exists()) return;
-    renderMystery(docSnap.data());
+const urlParams = new URLSearchParams(window.location.search);
+const docId = urlParams.get("id");
+console.log("📦 Attempting to fetch document with ID:", docId);
+
+const docRef = doc(db, "mysteries", docId);
+const docSnap = await getDoc(docRef);
+
+if (!docSnap.exists()) {
+  console.warn("⚠️ Document not found:", docId);
+  document.getElementById("mystery-title").textContent = "Mystery not found.";
+  return;
+}
+
+console.log("✅ Document fetched:", docId);
+renderMystery(docSnap.data());
+
   } else {
     // Load today’s mystery
     const today = new Date();
