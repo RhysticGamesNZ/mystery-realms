@@ -132,4 +132,18 @@ function renderMystery(data) {
   }
 }
 
+window.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("welcome-modal");
+  const closeBtn = document.getElementById("close-welcome");
+
+  if (!localStorage.getItem("mystery-welcome-seen")) {
+    modal.style.display = "flex";
+  }
+
+  closeBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+    localStorage.setItem("mystery-welcome-seen", "true");
+  });
+});
+
 loadTodayMystery();
