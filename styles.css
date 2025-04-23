@@ -6,7 +6,7 @@
 
 html, body {
   width: 100%;
-  overflow-x: hidden; /* ⛔ prevent horizontal scroll */
+  overflow-x: hidden;
   font-family: 'IM Fell English', serif;
 }
 
@@ -226,6 +226,36 @@ fieldset label {
   .nav-links.active {
     display: flex; /* Show navigation links when the "active" class is added */
   }
+}
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: #f7f0e0;
+  color: #66401A;
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.modal-content button {
+  margin-top: 1rem;
+  padding: 0.5rem 1.2rem;
+  background: #822E2B;
+  color: #f7f0e0;
+  border: none;
+  border-radius: 6px;
+  font-family: 'IM Fell English', serif;
+  cursor: pointer;
 }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
