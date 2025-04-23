@@ -15,47 +15,39 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 async function loadLore() {
-  const loreSnapshot = await getDocs(collection(db, "lore"));
-  const loreContainer = document.getElementById("lore-container");
+  const querySnapshot = await getDocs(collection(db, "lore"));
+  const container = document.getElementById("lore-container");
 
-  const loreByCategory = {};
+  const categorized = {};
 
-  loreSnapshot.forEach((doc) => {
+  // Group by category
+  querySnapshot.forEach(doc => {
     const data = doc.data();
-    if (!loreByCategory[data.category]) {
-      loreByCategory[data.category] = [];
-    }
-    loreByCategory[data.category].push(data);
+    if (!categorized[data.category]) categorized[data.category] = [];
+    categorized[data.category].push(data);
   });
 
-  for (const [category, entries] of Object.entries(loreByCategory)) {
-    const section = document.createElement("section");
-    section.classList.add("lore-section");
+  // Render categories
+  for (const category in categorized) {
+    const categoryDetails = document.createElement("details");
+    const categorySummary = document.createElement("summary");
+    categorySummary.textContent = category;
+    categoryDetails.appendChild(categorySummary);
 
-    const heading = document.createElement("h2");
-    heading.textContent = category;
-    heading.className = "lore-category";
-    section.appendChild(heading);
+    categorized[category].forEach(entry => {
+      const entryDetails = document.createElement("details");
+      const entrySummary = document.createElement("summary");
+      entrySummary.textContent = entry.title;
 
-    entries.forEach(entry => {
-      const entryDiv = document.createElement("div");
-      entryDiv.className = "lore-entry";
+      const content = document.createElement("p");
+      content.textContent = entry.details;
 
-      const summary = document.createElement("div");
-      summary.className = "lore-summary";
-      summary.textContent = entry.title;
-      summary.onclick = () => entryDiv.classList.toggle("open");
-
-      const details = document.createElement("div");
-      details.className = "lore-details";
-      details.textContent = entry.details;
-
-      entryDiv.appendChild(summary);
-      entryDiv.appendChild(details);
-      section.appendChild(entryDiv);
+      entryDetails.appendChild(entrySummary);
+      entryDetails.appendChild(content);
+      categoryDetails.appendChild(entryDetails);
     });
 
-    loreContainer.appendChild(section);
+    container.appendChild(categoryDetails);
   }
 }
 
