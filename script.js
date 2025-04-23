@@ -1,15 +1,15 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import { getFirestore, collection, query, where, getDocs, getDoc, doc, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDXY7DEhinmbYLQ7zBRgEUJoc_eRsp-aNU",
-    authDomain: "mystery-realms.firebaseapp.com",
-    projectId: "mystery-realms",
-    storageBucket: "mystery-realms.firebasestorage.app",
-    messagingSenderId: "511471364499",
-    appId: "1:511471364499:web:fbc7d813e9b8d28cf32066",
-    measurementId: "G-ELW3HVV36V"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyDXY7DEhinmbYLQ7zBRgEUJoc_eRsp-aNU",
+  authDomain: "mystery-realms.firebaseapp.com",
+  projectId: "mystery-realms",
+  storageBucket: "mystery-realms.firebasestorage.app",
+  messagingSenderId: "511471364499",
+  appId: "1:511471364499:web:fbc7d813e9b8d28cf32066",
+  measurementId: "G-ELW3HVV36V"
+};
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
@@ -24,25 +24,26 @@ function getQueryDateRange(dateStr) {
 
 async function loadTodayMystery() {
   let q;
+  const urlParams = new URLSearchParams(window.location.search);
+  const docId = urlParams.get("id");
+  
+  console.log("📦 Attempting to fetch document with ID:", docId);
 
-const urlParams = new URLSearchParams(window.location.search);
-const docId = urlParams.get("id");
-console.log("📦 Attempting to fetch document with ID:", docId);
+  if (docId) {
+    // Fetch mystery by docId if it's present in the URL
+    const docRef = doc(db, "mysteries", docId);
+    const docSnap = await getDoc(docRef);
 
-const docRef = doc(db, "mysteries", docId);
-const docSnap = await getDoc(docRef);
+    if (!docSnap.exists()) {
+      console.warn("⚠️ Document not found:", docId);
+      document.getElementById("mystery-title").textContent = "Mystery not found.";
+      return;
+    }
 
-if (!docSnap.exists()) {
-  console.warn("⚠️ Document not found:", docId);
-  document.getElementById("mystery-title").textContent = "Mystery not found.";
-  return;
-}
-
-console.log("✅ Document fetched:", docId);
-renderMystery(docSnap.data());
-
-else {
-    // Load today’s mystery
+    console.log("✅ Document fetched:", docId);
+    renderMystery(docSnap.data());
+  } else {
+    // Load today's mystery if no docId is provided
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
     const tomorrow = new Date(today);
@@ -92,42 +93,43 @@ function renderMystery(data) {
     choicesFieldset.appendChild(label);
   });
 
-const formKey = `mystery-submitted-${data.title.replace(/\s+/g, "-").toLowerCase()}`;
-const saved = JSON.parse(localStorage.getItem(formKey));
+  const formKey = `mystery-submitted-${data.title.replace(/\s+/g, "-").toLowerCase()}`;
+  const saved = JSON.parse(localStorage.getItem(formKey));
 
-if (saved) {
-  // Already answered — auto-render result
-  choicesFieldset.style.display = "none";
-  form.style.display = "none";
-  resultDiv.innerHTML = `
-    <p><strong>${saved.correct ? 'Correct!' : 'Incorrect.'}</strong></p>
-    <p><strong>Answer:</strong> ${data.answer}</p>
-    <p><em>${data.explanation}</em></p>
-    <p><em><strong>Archive Note:</strong> ${data.archive_note}</em></p>
-  `;
-} else {
-  form.onsubmit = (e) => {
-    e.preventDefault();
-    const selected = document.querySelector("input[name='mystery-choice']:checked");
-    if (!selected) return;
-
-    const isCorrect = selected.value === data.answer;
-
-    localStorage.setItem(formKey, JSON.stringify({
-      selected: selected.value,
-      correct: isCorrect
-    }));
-
-    // Hide form & show result
+  if (saved) {
+    // Already answered — auto-render result
     choicesFieldset.style.display = "none";
     form.style.display = "none";
     resultDiv.innerHTML = `
-      <p><strong>${isCorrect ? 'Correct!' : 'Incorrect.'}</strong></p>
+      <p><strong>${saved.correct ? 'Correct!' : 'Incorrect.'}</strong></p>
       <p><strong>Answer:</strong> ${data.answer}</p>
       <p><em>${data.explanation}</em></p>
       <p><em><strong>Archive Note:</strong> ${data.archive_note}</em></p>
     `;
-  };
+  } else {
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      const selected = document.querySelector("input[name='mystery-choice']:checked");
+      if (!selected) return;
+
+      const isCorrect = selected.value === data.answer;
+
+      localStorage.setItem(formKey, JSON.stringify({
+        selected: selected.value,
+        correct: isCorrect
+      }));
+
+      // Hide form & show result
+      choicesFieldset.style.display = "none";
+      form.style.display = "none";
+      resultDiv.innerHTML = `
+        <p><strong>${isCorrect ? 'Correct!' : 'Incorrect.'}</strong></p>
+        <p><strong>Answer:</strong> ${data.answer}</p>
+        <p><em>${data.explanation}</em></p>
+        <p><em><strong>Archive Note:</strong> ${data.archive_note}</em></p>
+      `;
+    };
+  }
 }
 
 loadTodayMystery();
