@@ -5,7 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lore Archive</title>
   <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />  
+  <link rel="stylesheet" href="styles.css" /> 
+  <style>
+    .lore-category {
+      font-size: 1.5rem;
+      margin-top: 2rem;
+      color: #822E2B;
+    }
+    .lore-entry {
+      border: 1px solid #66401A;
+      background-color: #f9f3df;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+    }
+    .lore-summary {
+      background: #e6dcc8;
+      padding: 0.75rem;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 6px 6px 0 0;
+    }
+    .lore-details {
+      padding: 0.75rem;
+      display: none;
+    }
+    .lore-entry.open .lore-details {
+      display: block;
+    }
+  </style>
 </head>
 <body>
   <header>
