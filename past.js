@@ -18,7 +18,6 @@ async function loadPastMysteries() {
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
   const todayStart = Timestamp.fromDate(today);
-
   const tomorrow = new Date(today);
   tomorrow.setUTCDate(today.getUTCDate() + 1);
   const todayEnd = Timestamp.fromDate(tomorrow);
@@ -29,44 +28,20 @@ async function loadPastMysteries() {
 
   snapshot.forEach(doc => {
     const data = doc.data();
+    const id = doc.id;
 
-    // Skip today’s mystery using a range check
-    if (data.date && data.date >= todayStart && data.date < todayEnd) {
-      return;
-    }
+    // Skip today's mystery
+    if (data.date && data.date >= todayStart && data.date < todayEnd) return;
 
-    const section = document.createElement("section");
-    section.className = "card";
+    const link = document.createElement("a");
+    link.href = `index.html?id=${id}`;
+    link.textContent = data.title;
+    link.className = "mystery-link";
 
-    const title = document.createElement("h2");
-    title.textContent = data.title;
-
-    const premise = document.createElement("p");
-    premise.textContent = data.premise;
-
-    const clues = document.createElement("ul");
-    data.clues.forEach(clue => {
-      const li = document.createElement("li");
-      li.textContent = clue;
-      clues.appendChild(li);
-    });
-
-    const choices = document.createElement("ul");
-    data.choices.forEach(choice => {
-      const li = document.createElement("li");
-      li.textContent = choice;
-      choices.appendChild(li);
-    });
-
-    const explanation = document.createElement("p");
-    explanation.innerHTML = `<strong>Explanation:</strong> ${data.explanation}`;
-
-    section.appendChild(title);
-    section.appendChild(premise);
-    section.appendChild(clues);
-    section.appendChild(choices);
-    section.appendChild(explanation);
-    container.appendChild(section);
+    const wrapper = document.createElement("div");
+    wrapper.appendChild(link);
+    container.appendChild(wrapper);
   });
 }
+
 loadPastMysteries();
