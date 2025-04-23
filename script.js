@@ -55,6 +55,9 @@ async function loadTodayMystery() {
   }
 }
 
+console.log("Mystery found:", doc.id, doc.data());
+console.log("Query range", start.toDate(), "to", end.toDate());
+
 function renderMystery(data) {
   document.getElementById("mystery-title").textContent = data.title;
   document.getElementById("mystery-premise").textContent = data.premise;
