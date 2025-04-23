@@ -1,4 +1,7 @@
-body { 
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   background: url('/parchment-texture.jpg') repeat;
   background-size: cover;
   background-color: #F7F0E0;
@@ -55,9 +58,12 @@ footer {
   padding: 1rem;
 }
 main {
-  padding: 2rem;
-  max-width: 800px;
-  margin: auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex: 1;
+  padding: 1rem;
+  box-sizing: border-box;
 }
 fieldset {
   border: none;
@@ -154,17 +160,12 @@ fieldset label {
   font-weight: bold;
 }
 .ad-left, .ad-right {
-  position: fixed;
-  top: 0;
-  bottom: 0;
+  position: sticky;
+  top: 1rem;
   width: 120px;
-  background: #e0d5be;
-  color: #822E2B;
-  text-align: center;
-  padding-top: 1rem;
-  font-weight: bold;
-  font-family: 'IM Fell English', serif;
-  z-index: 1000;
+  min-width: 120px;
+  height: auto;
+  margin: 0 1rem;
 }
 .ad-left { left: 0; }
 .ad-right { right: 0; }
