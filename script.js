@@ -41,7 +41,7 @@ if (!docSnap.exists()) {
 console.log("✅ Document fetched:", docId);
 renderMystery(docSnap.data());
 
-  } else {
+else {
     // Load today’s mystery
     const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
@@ -62,9 +62,6 @@ renderMystery(docSnap.data());
     });
   }
 }
-
-console.log("Mystery found:", doc.id, doc.data());
-console.log("Query range", start.toDate(), "to", end.toDate());
 
 function renderMystery(data) {
   document.getElementById("mystery-title").textContent = data.title;
