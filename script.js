@@ -53,7 +53,7 @@ const q = query(
       };
       choicesDiv.appendChild(btn);
     });
-  });
+  };
 }
 
 loadTodayMystery();
