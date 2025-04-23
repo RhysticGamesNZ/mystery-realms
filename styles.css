@@ -29,13 +29,21 @@ h1 {
 .logo img {
   height: 150px;
 }
+.nav-links {
+  display: flex;
+}
 .nav-links a {
   color: #F7F0E0;
   margin-left: 1.5rem;
   text-decoration: none;
   font-weight: bold;
   font-family: 'IM Fell English', serif;
-  transition: color 0.2s ease;
+}
+/* Hamburger icon */
+.hamburger {
+  display: none;
+  font-size: 2rem;
+  cursor: pointer;
 }
 .nav-links a:hover {
   color: #FFDBC5;
@@ -173,6 +181,24 @@ fieldset label {
 @media screen and (max-width: 768px) {
   .ad-left, .ad-right { display: none; }
   main { margin-left: auto; margin-right: auto; }
+   .nav-links {
+    display: none; /* Hide navigation links on mobile */
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+  }
+
+  .nav-links a {
+    margin: 1rem 0; /* Space out the links */
+  }
+
+  .hamburger {
+    display: block; /* Show hamburger icon on mobile */
+  }
+
+  .nav-links.active {
+    display: flex; /* Show navigation links when the "active" class is added */
+  }
 }
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
