@@ -46,21 +46,30 @@ async function loadTodayMystery() {
       cluesList.appendChild(li);
     });
 
-    const choicesDiv = document.getElementById("mystery-choices");
+    const choicesFieldset = document.getElementById("mystery-choices");
+    const form = document.getElementById("mystery-form");
     const resultDiv = document.getElementById("mystery-result");
-    choicesDiv.innerHTML = "";
-    data.choices.forEach(choice => {
-      const btn = document.createElement("button");
-      btn.textContent = choice;
-      btn.className = "choice-btn";
-      btn.onclick = () => {
-        const isCorrect = choice === data.answer;
-        resultDiv.innerHTML = `
-          <p><strong>${isCorrect ? 'Correct!' : 'Incorrect.'}</strong></p>
-          <p><em>${data.explanation}</em></p>
-        `;
-      };
-      choicesDiv.appendChild(btn);
+
+    choicesFieldset.innerHTML = "";
+    data.choices.forEach((choice, index) => {
+      const label = document.createElement("label");
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = "mystery-choice";
+      input.value = choice;
+      if (index === 0) input.checked = true;
+      label.appendChild(input);
+      label.appendChild(document.createTextNode(choice));
+      choicesFieldset.appendChild(label);
+    });
+
+    form.onsubmit = (e) => {
+      e.preventDefault();
+      const selected = document.querySelector("input[name='mystery-choice']:checked");
+      const isCorrect = selected.value === data.answer;
+      resultDiv.innerHTML = `
+        <p><strong>${isCorrect ? 'Correct!' : 'Incorrect.'}</strong></p>
+        <p><em>${data.explanation}</em></p>
     });
   });
 }
