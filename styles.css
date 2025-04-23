@@ -39,26 +39,6 @@ main {
   border: 2px solid #66401A;
   border-radius: 10px;
 }
-.lore-summary::after {
-  content: '▼';
-  float: right;
-  transform: rotate(0);
-  transition: transform 0.3s ease;
-}
-.lore-entry.open .lore-summary::after {
-  transform: rotate(180deg);
-}
-.lore-entry {
-  border: 1px solid #66401A;
-  background-color: #f9f3df;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 8px;
-  transition: box-shadow 0.3s ease;
-}
-.lore-entry:hover {
-  box-shadow: 0 0 10px rgba(173, 123, 76, 0.6);
-}
 .mystery-link {
   display: block;
   background-color: #f3e9d2;
