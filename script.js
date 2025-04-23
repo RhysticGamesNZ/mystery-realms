@@ -15,17 +15,19 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 async function loadTodayMystery() {
-  const today = new Date();
-  today.setUTCHours(0, 0, 0, 0);
-  const midnightTimestamp = Timestamp.fromDate(today);
+const today = new Date();
+today.setUTCHours(0, 0, 0, 0);
+const start = Timestamp.fromDate(today);
 
-  const q = query(collection(db, "mysteries"), where("date", "==", midnightTimestamp));
-  const querySnapshot = await getDocs(q);
+const tomorrow = new Date(today);
+tomorrow.setUTCDate(today.getUTCDate() + 1);
+const end = Timestamp.fromDate(tomorrow);
 
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
-    document.getElementById("mystery-title").textContent = data.title;
-    document.getElementById("mystery-premise").textContent = data.premise;
+const q = query(
+  collection(db, "mysteries"),
+  where("date", ">=", start),
+  where("date", "<", end)
+);
 
     const cluesList = document.getElementById("mystery-clues");
     cluesList.innerHTML = "";
@@ -55,4 +57,4 @@ async function loadTodayMystery() {
 }
 
 loadTodayMystery();
-
+console.log("Docs:", querySnapshot.docs.map(doc => doc.data()));
