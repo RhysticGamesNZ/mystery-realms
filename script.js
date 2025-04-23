@@ -63,15 +63,19 @@ async function loadTodayMystery() {
       choicesFieldset.appendChild(label);
     });
 
-    form.onsubmit = (e) => {
-      e.preventDefault();
-      const selected = document.querySelector("input[name='mystery-choice']:checked");
-      const isCorrect = selected.value === data.answer;
-      resultDiv.innerHTML = `
-        <p><strong>${isCorrect ? 'Correct!' : 'Incorrect.'}</strong></p>
-        <p><em>${data.explanation}</em></p>
-    });
-  });
+   if (form && choicesFieldset && resultDiv) {
+  form.onsubmit = (e) => {
+    e.preventDefault();
+    const selected = document.querySelector("input[name='mystery-choice']:checked");
+    if (!selected) return;
+
+    const isCorrect = selected.value === data.answer;
+    resultDiv.innerHTML = `
+      <p><strong>${isCorrect ? 'Correct!' : 'Incorrect.'}</strong></p>
+      <p><em>${data.explanation}</em></p>
+    `;
+  };
 }
+
 
 loadTodayMystery();
