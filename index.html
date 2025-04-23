@@ -25,16 +25,6 @@
     </div>
   </div>
 </header>
-
-<div id="welcome-modal" class="modal-overlay">
-  <div class="modal-content parchment">
-    <h2>Welcome to Mystery Realms</h2>
-    <p>
-      Each day, a new arcane mystery awaits you. Gather clues, consult the archives, and uncover the truth.
-    </p>
-    <button id="close-welcome">Begin</button>
-  </div>
-</div>
   
 <div class="page-wrapper">
 <div id="ad-left" class="ad-left">
@@ -79,7 +69,29 @@
        data-ad-format="auto"
        data-full-width-responsive="true"></ins>
 </div>
-  <script type="module" src="script.js"></script>
+ <footer class="footer">
+    <p>&copy; Rhystic Games 2025</p>
+  </footer>
+</div>
+  <div id="welcome-modal" class="modal-overlay">
+  <div class="modal-content parchment">
+    <h2>Welcome to Gloomark</h2>
+    <p> 
+      The city is old, cracked, and bleeding magic.
+It forgets what it should remember—and remembers what it shouldn’t.
+
+You are a Seeker.
+You don’t answer to the Watch. You don’t belong to the Ministry.
+You take the cases no one else will.
+
+Relics gone rogue. Spirits in mirrors. Names that erase themselves.
+Your job is to find the truth. Contain what you can. Survive what you can’t.
+      Each day, a new arcane mystery awaits you. Gather clues, consult the archives, and uncover the truth.
+    </p>
+    <button id="close-welcome">Begin</button>
+  </div>
+</div>
+    <script type="module" src="script.js"></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
@@ -124,9 +136,5 @@
   navLinks.classList.toggle("active"); // Toggle visibility of navigation links
 });
 </script>
-  <footer class="footer">
-    <p>&copy; Rhystic Games 2025</p>
-  </footer>
-</div>
 </body>
 </html>
