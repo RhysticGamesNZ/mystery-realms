@@ -38,15 +38,21 @@ async function loadLore() {
     section.appendChild(heading);
 
     entries.forEach(entry => {
-      const tile = document.createElement("div");
-      tile.className = "lore-tile";
-      const title = document.createElement("h3");
-      title.textContent = entry.title;
-      const details = document.createElement("p");
+      const entryDiv = document.createElement("div");
+      entryDiv.className = "lore-entry";
+
+      const summary = document.createElement("div");
+      summary.className = "lore-summary";
+      summary.textContent = entry.title;
+      summary.onclick = () => entryDiv.classList.toggle("open");
+
+      const details = document.createElement("div");
+      details.className = "lore-details";
       details.textContent = entry.details;
-      tile.appendChild(title);
-      tile.appendChild(details);
-      section.appendChild(tile);
+
+      entryDiv.appendChild(summary);
+      entryDiv.appendChild(details);
+      section.appendChild(entryDiv);
     });
 
     loreContainer.appendChild(section);
