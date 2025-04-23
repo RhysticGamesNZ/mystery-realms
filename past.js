@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+import { getFirestore, collection, query, where, getDocs, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDXY7DEhinmbYLQ7zBRgEUJoc_eRsp-aNU",
@@ -17,7 +17,11 @@ const db = getFirestore(app);
 async function loadPastMysteries() {
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
-  const todayTimestamp = Timestamp.fromDate(today);
+  const todayStart = Timestamp.fromDate(today);
+
+  const tomorrow = new Date(today);
+  tomorrow.setUTCDate(today.getUTCDate() + 1);
+  const todayEnd = Timestamp.fromDate(tomorrow);
 
   const q = query(collection(db, "mysteries"), orderBy("date", "desc"));
   const snapshot = await getDocs(q);
@@ -25,13 +29,18 @@ async function loadPastMysteries() {
 
   snapshot.forEach(doc => {
     const data = doc.data();
-    if (data.date && data.date.toDate().getTime() === today.getTime()) return;
+
+    // Skip today’s mystery using a range check
+    if (data.date && data.date >= todayStart && data.date < todayEnd) {
+      return;
+    }
 
     const section = document.createElement("section");
     section.className = "card";
 
     const title = document.createElement("h2");
     title.textContent = data.title;
+
     const premise = document.createElement("p");
     premise.textContent = data.premise;
 
@@ -60,5 +69,4 @@ async function loadPastMysteries() {
     container.appendChild(section);
   });
 }
-
 loadPastMysteries();
