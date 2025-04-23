@@ -61,17 +61,15 @@ footer {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  gap: 2rem;
   padding: 1rem;
-  box-sizing: border-box;
+  flex-wrap: wrap;
 }
 main {
   display: flex;
   flex-direction: column;
-  flex: 1;
-  justify-content: center;
   max-width: 800px;
-  padding: 1rem;
-  box-sizing: border-box;
+  flex: 1;
 }
 fieldset {
   border: none;
