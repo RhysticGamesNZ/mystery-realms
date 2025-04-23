@@ -54,7 +54,6 @@ const q = query(
       choicesDiv.appendChild(btn);
     });
   };
-}
 
 loadTodayMystery();
 console.log("Docs:", querySnapshot.docs.map(doc => doc.data()));
