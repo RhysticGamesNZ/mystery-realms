@@ -1,5 +1,5 @@
 body { 
-  background: url('/images/parchment-texture.jpg') repeat;
+  background: url('/parchment-texture.jpg') repeat;
   background-size: cover;
   background-color: #F7F0E0;
   color: #66401A;
@@ -62,7 +62,6 @@ main {
   margin: 0.5rem 0;
   cursor: pointer;
   background: #f4e8d8;
-  border: 1px solid #66401A;
   border-radius: 6px;
   transition: background 0.3s;
 }
