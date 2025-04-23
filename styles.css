@@ -48,6 +48,34 @@ main {
 .lore-entry.open .lore-summary::after {
   transform: rotate(180deg);
 }
+.lore-entry {
+  border: 1px solid #66401A;
+  background-color: #f9f3df;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  transition: box-shadow 0.3s ease;
+}
+.lore-entry:hover {
+  box-shadow: 0 0 10px rgba(173, 123, 76, 0.6);
+}
+.mystery-link {
+  display: block;
+  background-color: #f3e9d2;
+  color: #5a3910;
+  font-family: 'IM Fell English', serif;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  border: 2px solid #b59a74;
+  border-radius: 8px;
+  box-shadow: inset 0 0 5px #e5d4b5;
+  text-decoration: none;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+.mystery-link:hover {
+  box-shadow: 0 0 12px rgba(221, 191, 130, 0.8);
+  transform: translateY(-2px);
+}
 #mystery-choices label {
   display: block;
   padding: 0.5rem;
