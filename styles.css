@@ -57,11 +57,19 @@ footer {
   color: #F7F0E0;
   padding: 1rem;
 }
+.page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 1rem;
+  box-sizing: border-box;
+}
 main {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  flex-direction: column;
   flex: 1;
+  justify-content: center;
+  max-width: 800px;
   padding: 1rem;
   box-sizing: border-box;
 }
@@ -180,7 +188,13 @@ fieldset label {
   margin-top: 2rem;
 }
 @media screen and (max-width: 768px) {
-  .ad-left, .ad-right { display: none; }
+  .ad-left, .ad-right { 
+    display: none; 
+  }
+    .page-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
   main { margin-left: auto; margin-right: auto; }
    .nav-links {
     display: none; /* Hide navigation links on mobile */
