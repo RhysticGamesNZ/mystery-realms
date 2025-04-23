@@ -84,13 +84,40 @@ function renderMystery(data) {
     choicesFieldset.appendChild(label);
   });
 
+const formKey = `mystery-submitted-${data.title.replace(/\s+/g, "-").toLowerCase()}`;
+const saved = JSON.parse(localStorage.getItem(formKey));
+
+if (saved) {
+  // Already answered — auto-render result
+  choicesFieldset.style.display = "none";
+  form.style.display = "none";
+  resultDiv.innerHTML = `
+    <p><strong>${saved.correct ? 'Correct!' : 'Incorrect.'}</strong></p>
+    <p><strong>Answer:</strong> ${data.answer}</p>
+    <p><em>${data.explanation}</em></p>
+    <p><em><strong>Archive Note:</strong> ${data.archive_note}</em></p>
+  `;
+} else {
   form.onsubmit = (e) => {
     e.preventDefault();
     const selected = document.querySelector("input[name='mystery-choice']:checked");
+    if (!selected) return;
+
     const isCorrect = selected.value === data.answer;
+
+    localStorage.setItem(formKey, JSON.stringify({
+      selected: selected.value,
+      correct: isCorrect
+    }));
+
+    // Hide form & show result
+    choicesFieldset.style.display = "none";
+    form.style.display = "none";
     resultDiv.innerHTML = `
       <p><strong>${isCorrect ? 'Correct!' : 'Incorrect.'}</strong></p>
+      <p><strong>Answer:</strong> ${data.answer}</p>
       <p><em>${data.explanation}</em></p>
+      <p><em><strong>Archive Note:</strong> ${data.archive_note}</em></p>
     `;
   };
 }
