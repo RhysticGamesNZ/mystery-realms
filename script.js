@@ -135,13 +135,16 @@ function renderMystery(data) {
 window.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("welcome-modal");
   const closeBtn = document.getElementById("close-welcome");
+  const siteContent = document.getElementById("site-content");
 
   if (!localStorage.getItem("mystery-welcome-seen")) {
     modal.style.display = "flex";
+    siteContent.classList.add("dimmed");
   }
 
   closeBtn.addEventListener("click", () => {
     modal.style.display = "none";
+    siteContent.classList.remove("dimmed");
     localStorage.setItem("mystery-welcome-seen", "true");
   });
 });
