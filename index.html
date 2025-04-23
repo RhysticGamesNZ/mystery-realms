@@ -106,7 +106,11 @@
   (adsbygoogle = window.adsbygoogle || []).push({});
   (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
-  
+  <script>document.getElementById("hamburger-icon").addEventListener("click", function() {
+  const navLinks = document.querySelector(".nav-links");
+  navLinks.classList.toggle("active"); // Toggle visibility of navigation links
+});
+</script>
   <footer class="footer">
     <p>&copy; Rhystic Games 2025</p>
   </footer>
