@@ -17,10 +17,7 @@ const db = getFirestore(app);
 async function loadPastMysteries() {
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
-  const todayStart = Timestamp.fromDate(today);
-  const tomorrow = new Date(today);
-  tomorrow.setUTCDate(today.getUTCDate() + 1);
-  const todayEnd = Timestamp.fromDate(tomorrow);
+  const todayTimestamp = Timestamp.fromDate(today);
 
   const q = query(collection(db, "mysteries"), orderBy("date", "desc"));
   const snapshot = await getDocs(q);
@@ -31,7 +28,7 @@ async function loadPastMysteries() {
     const id = doc.id;
 
     // Skip today's mystery
-    if (data.date && data.date >= todayStart && data.date < todayEnd) return;
+    if (!data.date || data.date.toMillis() >= todayTimestamp.toMillis()) return;
 
     const link = document.createElement("a");
     link.href = `index.html?id=${id}`;
