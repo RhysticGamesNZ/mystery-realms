@@ -14,6 +14,13 @@ import { getFirestore, collection, query, where, getDocs, Timestamp } from "http
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+function formatText(text) {
+  return text
+    .split("\n")
+    .map(line => `<p>${line.trim()}</p>`)
+    .join("");
+}
+
 async function loadLore() {
   const querySnapshot = await getDocs(collection(db, "lore"));
   const container = document.getElementById("lore-container");
@@ -40,7 +47,7 @@ async function loadLore() {
       entrySummary.textContent = entry.title;
 
       const content = document.createElement("p");
-      content.textContent = entry.details;
+      content.innerHTML = formatText(entry.details);
 
       entryDetails.appendChild(entrySummary);
       entryDetails.appendChild(content);
