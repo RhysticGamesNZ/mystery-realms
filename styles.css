@@ -8,6 +8,7 @@ html, body {
   width: 100%;
   overflow-x: hidden;
   font-family: 'IM Fell English', serif;
+  font-size: 18px;
   position: relative;
   z-index: 0;
 }
@@ -23,7 +24,7 @@ body {
   font-family: 'Cormorant Garamond', serif;
   margin: 0;
   padding: 0;
-  line-height: 1.6;
+  line-height: 1.7;
   margin-right: 0 !important;
 }
 h1 {
@@ -81,10 +82,13 @@ footer {
   flex-wrap: wrap;
   max-width: 100%;
 }
+h3 {
+  text-align: center;
+}
 main {
   display: flex;
   flex-direction: column;
-  max-width: 800px;
+  max-width: 1000px;
   flex: 1;
 }
 fieldset {
@@ -117,6 +121,7 @@ fieldset label {
   background-color: #f3e9d2;
   color: #5a3910;
   font-family: 'IM Fell English', serif;
+  font-size: 1.05rem;
   padding: 1rem 1.5rem;
   margin-bottom: 1rem;
   border: 2px solid #b59a74;
@@ -131,7 +136,7 @@ fieldset label {
 }
 #mystery-title {
   text-align: center;
-  font-size: 2rem;
+  font-size: 2.2rem;
   margin-bottom: 1rem;
 }
 #site-content.dimmed {
@@ -208,6 +213,9 @@ fieldset label {
   margin-top: 2rem;
 }
 @media screen and (max-width: 768px) {
+  html{
+    font-size: 19px;
+  }
   .ad-left, .ad-right { 
     display: none; 
   }
