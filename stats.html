@@ -40,7 +40,7 @@
       <input type="email" id="auth-email" required /><br /><br />
       <label>Password:</label><br />
       <input type="password" id="auth-password" required /><br /><br />
-      <button type="submit">Login / Sign Up</button>
+      <button type="submit">Login or Create an account</button>
     </form>
     <p id="auth-error" style="color: darkred;"></p>
   </main>
@@ -116,6 +116,7 @@
           await createUserWithEmailAndPassword(auth, email, password);
           await setDoc(doc(db, "users", auth.currentUser.uid), {
             premium: false,
+            level: "Apprentice Seeker",
             streak: 0,
             correct: 0,
             incorrect: 0,
