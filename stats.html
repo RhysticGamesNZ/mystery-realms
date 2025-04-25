@@ -1,49 +1,113 @@
-<!-- === stats.html === -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Player Stats</title>
-  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css" />  
+  <title>Your Profile – Mystery Realms</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-    <header class="site-header">
-  <div class="header-container">
-    <div class="logo">
-      <img src="./20250423_2137_Mystery Realms Icon_remix_01jsh03nwqfmjseat47yz3fnz5.png" alt="Mystery Realms Logo" />
-    </div>
-    <nav class="nav-links">
-      <a href="index.html">Mystery</a> |
-      <a href="past.html">Past Mysteries</a> |
-      <a href="lore.html">Lore & Codex</a> |
-      <a href="stats.html">Stats</a>
-    </nav>
-  </div>
-</header>
-
-  <main>
-    <section id="auth-section" class="card">
-      <h2>Login</h2>
-      <input type="email" id="email" placeholder="Email" />
-      <input type="password" id="password" placeholder="Password" />
-      <button id="login-btn">Log In</button>
-      <button id="signup-btn">Sign Up</button>
-      <p id="auth-error" style="color: #822E2B;"></p>
-    </section>
-
-    <section id="stats-container" class="card" style="display: none;">
-      <p><strong>Streak:</strong> <span id="streak">0</span> days</p>
-      <p><strong>Correct Guesses:</strong> <span id="correct">0</span></p>
-      <p><strong>Incorrect Guesses:</strong> <span id="incorrect">0</span></p>
-      <p><strong>Lore Pages Read:</strong> <span id="lore-read">0</span></p>
-    </section>
+  <main class="card parchment" id="auth-container">
+    <h2 id="auth-title">Sign In or Create an Account</h2>
+    <form id="auth-form">
+      <label>Email:</label><br />
+      <input type="email" id="auth-email" required /><br /><br />
+      <label>Password:</label><br />
+      <input type="password" id="auth-password" required /><br /><br />
+      <button type="submit">Login / Sign Up</button>
+    </form>
+    <p id="auth-error" style="color: darkred;"></p>
   </main>
 
-  <footer>
-    <p>&copy; Rhystic Games 2025</p>
-  </footer>
-  <script type="module" src="stats.js"></script>
+  <main class="card parchment" id="profile-container" style="display: none;">
+    <h2>Welcome, <span id="user-email"></span></h2>
+    <p><strong>Premium:</strong> <span id="user-premium">Checking...</span></p>
+    <p><strong>Current Streak:</strong> <span id="user-streak">0</span></p>
+    <p><strong>Longest Streak:</strong> <span id="user-streaklong">0</span></p>
+    <p><strong>Correct Guesses:</strong> <span id="user-correct">0</span></p>
+    <p><strong>Incorrect Guesses:</strong> <span id="user-incorrect">0</span></p>
+    <p><strong>Lore Pages Read:</strong> <span id="user-lore-read">0</span></p>
+    <button id="logout-btn">Log Out</button>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDXY7DEhinmbYLQ7zBRgEUJoc_eRsp-aNU",
+      authDomain: "mystery-realms.firebaseapp.com",
+      projectId: "mystery-realms",
+      storageBucket: "mystery-realms.firebasestorage.app",
+      messagingSenderId: "511471364499",
+      appId: "1:511471364499:web:fbc7d813e9b8d28cf32066"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const authContainer = document.getElementById("auth-container");
+    const profileContainer = document.getElementById("profile-container");
+
+    const form = document.getElementById("auth-form");
+    const emailInput = document.getElementById("auth-email");
+    const passwordInput = document.getElementById("auth-password");
+    const errorDisplay = document.getElementById("auth-error");
+
+    form.onsubmit = async (e) => {
+      e.preventDefault();
+      const email = emailInput.value;
+      const password = passwordInput.value;
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (err) {
+        // If user doesn't exist, try creating one
+        try {
+          await createUserWithEmailAndPassword(auth, email, password);
+          await setDoc(doc(db, "users", auth.currentUser.uid), {
+            premium: false,
+            streak: 0,
+            correct: 0,
+            incorrect: 0,
+            loreRead: 0
+          });
+        } catch (createErr) {
+          errorDisplay.textContent = createErr.message;
+        }
+      }
+    };
+
+    document.getElementById("logout-btn").addEventListener("click", async () => {
+      await signOut(auth);
+      location.reload();
+    });
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        authContainer.style.display = "none";
+        profileContainer.style.display = "block";
+
+        document.getElementById("user-email").textContent = user.email;
+
+        const userDoc = await getDoc(doc(db, "users", user.uid));
+        if (userDoc.exists()) {
+          const data = userDoc.data();
+          document.getElementById("user-premium").textContent = data.premium ? "Yes" : "No";
+          document.getElementById("user-streak").textContent = data.streak ?? 0;
+          document.getElementById("user-correct").textContent = data.correct ?? 0;
+          document.getElementById("user-incorrect").textContent = data.incorrect ?? 0;
+          document.getElementById("user-lore-read").textContent = data.loreRead ?? 0;
+        } else {
+          document.getElementById("user-premium").textContent = "Unknown";
+        }
+      } else {
+        authContainer.style.display = "block";
+        profileContainer.style.display = "none";
+      }
+    });
+  </script>
 </body>
 </html>
