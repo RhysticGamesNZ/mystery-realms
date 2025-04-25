@@ -14,6 +14,31 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+window.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("welcome-modal");
+  const closeBtn = document.getElementById("close-welcome");
+  const siteContent = document.getElementById("site-content");
+
+  try {
+    const alreadySeen = localStorage.getItem("mystery-welcome-seen");
+    console.log("🔍 Welcome Seen Value:", alreadySeen);
+
+    if (!alreadySeen) {
+      modal.style.display = "flex";
+      siteContent.classList.add("dimmed");
+    }
+
+    closeBtn?.addEventListener("click", () => {
+      modal.style.display = "none";
+      siteContent.classList.remove("dimmed");
+      localStorage.setItem("mystery-welcome-seen", "true");
+      console.log("✅ Welcome modal dismissed");
+    });
+  } catch (e) {
+    console.warn("⚠️ localStorage access failed:", e);
+  }
+});
+
 function formatText(text) {
   return text
     .split("\n")
@@ -138,22 +163,5 @@ function renderMystery(data) {
     };
   }
 }
-
-window.addEventListener("DOMContentLoaded", () => {
-  const modal = document.getElementById("welcome-modal");
-  const closeBtn = document.getElementById("close-welcome");
-  const siteContent = document.getElementById("site-content");
-
-  if (!localStorage.getItem("mystery-welcome-seen")) {
-    modal.style.display = "flex";
-    siteContent.classList.add("dimmed");
-  }
-
-  closeBtn.addEventListener("click", () => {
-    modal.style.display = "none";
-    siteContent.classList.remove("dimmed");
-    localStorage.setItem("mystery-welcome-seen", "true");
-  });
-});
 
 loadTodayMystery();
