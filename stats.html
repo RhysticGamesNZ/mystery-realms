@@ -46,14 +46,19 @@
   </main>
 
   <main class="card parchment" id="profile-container" style="display: none;">
-    <h2>Welcome, <span id="user-email"></span></h2>
-    <img class="user-image" src="./detective.png" alt="badge">
+    <h2>Welcome, <span id="user-level"></span></h2>
+  <div class="profile-flex">
+  <img class="user-image" src="./detective.png" alt="badge" />
+  <div class="stats-info">
     <p><img class="stat-image" src="./agent.png" alt="detective"><strong>Premium:</strong> <span id="user-premium">Checking...</span></p>
-    <p><img class="stat-image" src="./fire.png" alt="fire.png"><strong>Current Streak:</strong> <span id="user-streak">0</span></p>
+    <p><img class="stat-image" src="./fire.png" alt="fire"><strong>Current Streak:</strong> <span id="user-streak">0</span></p>
     <p><img class="stat-image" src="./smoking-pipe.png" alt="pipe"><strong>Longest Streak:</strong> <span id="user-streaklong">0</span></p>
-    <p><img class="stat-image" src="./search.png" alt="maginifying glass"><strong>Correct Guesses:</strong> <span id="user-correct">0</span></p>
-    <p><img class="stat-image" src="./search.png" alt="maginifying glass"><strong>Incorrect Guesses:</strong> <span id="user-incorrect">0</span></p>
+    <p><img class="stat-image" src="./search.png" alt="magnifying glass"><strong>Correct Guesses:</strong> <span id="user-correct">0</span></p>
+    <p><img class="stat-image" src="./search.png" alt="magnifying glass"><strong>Incorrect Guesses:</strong> <span id="user-incorrect">0</span></p>
     <p><img class="stat-image" src="./book-(1).png" alt="book"><strong>Lore Pages Read:</strong> <span id="user-lore-read">0</span></p>
+  </div>
+</div>
+
     <button id="logout-btn">Log Out</button>
   </main>
 
@@ -144,6 +149,7 @@
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
           const data = userDoc.data();
+          document.getElementByID("user-level").textContent = data.level ?? "Seeker";
           document.getElementById("user-premium").textContent = data.premium ? "Yes" : "No";
           document.getElementById("user-streak").textContent = data.streak ?? 0;
           document.getElementById("user-correct").textContent = data.correct ?? 0;
