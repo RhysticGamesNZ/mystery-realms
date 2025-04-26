@@ -1,7 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import {
-  getFirestore, doc, getDoc, collection, getDocs, setDoc, serverTimestamp
-} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { Timestamp, query, where, collection, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 import {
   getAuth, onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
@@ -51,12 +49,30 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
-  const weekKey = getCurrentWeekKey();
-  const mysterySnap = await getDoc(doc(db, "weeklyMysteries", weekKey));
-  if (!mysterySnap.exists()) {
-    title.textContent = "Mystery Not Available";
-    return;
-  }
+// Get this week’s Monday 00:00 UTC+12
+const now = new Date();
+const utcPlus12 = new Date(now.getTime() + (12 * 60 * 60 * 1000));
+const monday = new Date(utcPlus12);
+monday.setUTCDate(monday.getUTCDate() - ((monday.getUTCDay() + 6) % 7));
+monday.setUTCHours(0, 0, 0, 0);
+const mondayTimestamp = Timestamp.fromDate(monday);
+
+// Query for the matching weekly mystery
+const weeklyQuery = query(
+  collection(db, "weeklyMysteries"),
+  where("date", "==", mondayTimestamp)
+);
+
+const snapshot = await getDocs(weeklyQuery);
+if (snapshot.empty) {
+  title.textContent = "Mystery Not Available";
+  return;
+}
+
+const mysteryDoc = snapshot.docs[0];
+const data = mysteryDoc.data();
+const docId = mysteryDoc.id;
+
 
   const data = mysterySnap.data();
   title.textContent = data.title;
@@ -92,10 +108,11 @@ onAuthStateChanged(auth, async (user) => {
       const selected = document.querySelector("input[name='weekly-choice']:checked");
       if (!selected) return;
 
-      await setDoc(doc(db, `weeklyMysteries/${weekKey}/votes/${user.uid}`), {
-        choice: selected.value,
-        timestamp: serverTimestamp()
-      });
+   await setDoc(doc(db, `weeklyMysteries/${docId}/votes/${user.uid}`), {
+  choice: selected.value,
+  timestamp: serverTimestamp()
+});
+
 
       result.innerHTML = "<p><strong>Thank you for voting. Your choice has been recorded.</strong></p>";
       form.style.display = "none";
