@@ -18,6 +18,7 @@
       <a href="past.html">Past Mysteries</a>
       <a href="lore.html">Lore & Codex</a>
       <a href="stats.html">Stats</a>
+      <a href="premium.html">Premium</a>
     </nav>
      <div class="hamburger" id="hamburger-icon">
       &#9776;
@@ -29,7 +30,7 @@
 <div id="ad-left" class="ad-left">
   <ins class="adsbygoogle"
        style="display:block;width:120px;height:600px"
-       data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+       data-ad-client="ca-pub-2795399173885321"
        data-ad-slot="1111111111"></ins>
 </div>
     
@@ -171,11 +172,20 @@ if (userDoc.exists()) {
   (adsbygoogle = window.adsbygoogle || []).push({});
   (adsbygoogle = window.adsbygoogle || []).push({});
   (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-  <script>document.getElementById("hamburger-icon").addEventListener("click", function() {
-  const navLinks = document.querySelector(".nav-links");
-  navLinks.classList.toggle("active"); // Toggle visibility of navigation links
-});
+<script>
+  document.getElementById("hamburger-icon").addEventListener("click", function () {
+    const navLinks = document.querySelector(".nav-links");
+    const logo = document.querySelector(".logo");
+
+    navLinks.classList.toggle("active");
+
+    // Hide or show logo depending on menu state
+    if (navLinks.classList.contains("active")) {
+      logo.style.display = "none";
+    } else {
+      logo.style.display = "block";
+    }
+  });
 </script>
 </body>
 </html>
