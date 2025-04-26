@@ -325,7 +325,7 @@ fieldset label {
 
 #auth-container,
 #profile-container {
-  max-width: 1200px;
+  max-width: 900px;
   margin: 2rem auto;
   padding: 2rem;
   background-color: rgba(247, 240, 224, 0.95);
@@ -341,8 +341,8 @@ fieldset label {
   flex-wrap: wrap;
 }
 .stat-image {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   vertical-align: middle;
   margin-right: 8px;
   opacity: 0.85;
@@ -350,8 +350,7 @@ fieldset label {
 }
 
 .user-image {
-  width: 120px;
-  height: 120px;
+  width: 180px;
   object-fit: cover;
   margin: 1rem auto;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
