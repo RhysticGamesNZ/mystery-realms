@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weekly Premium Mystery</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-container">
+      <div class="logo">
+        <img src="./20250423_2137_Mystery Realms Icon_remix_01jsh03nwqfmjseat47yz3fnz5.png" alt="Mystery Realms Logo" />
+      </div>
+      <nav class="nav-links">
+        <a href="index.html">Mystery</a>
+        <a href="past.html">Past Mysteries</a>
+        <a href="lore.html">Lore & Codex</a>
+        <a href="stats.html">Stats</a>
+        <a href="premium.html">Premium</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="card parchment" id="premium-container">
+    <h2 id="premium-title">Loading Premium Mystery...</h2>
+    <p id="premium-premise"></p>
+    <ul id="premium-clues"></ul>
+
+    <form id="vote-form" style="display:none;">
+      <fieldset id="premium-choices"></fieldset>
+      <button type="submit">Submit Your Decision</button>
+    </form>
+
+    <div id="vote-result"></div>
+    <p id="vote-error" style="color:darkred;"></p>
+  </main>
+
+  <script type="module" src="premium.js"></script>
+</body>
+</html>
