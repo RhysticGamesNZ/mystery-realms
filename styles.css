@@ -333,6 +333,13 @@ fieldset label {
   border-radius: 15px;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
 }
+.profile-flex {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
 .stat-image {
   width: 24px;
   height: 24px;
@@ -345,7 +352,12 @@ fieldset label {
 .user-image {
   width: 120px;
   height: 120px;
-  display: block;
+  object-fit: cover;
   margin: 1rem auto;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.stats-info p {
+  margin-bottom: 0.75rem;
+  font-size: 1.05rem;
 }
