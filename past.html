@@ -40,6 +40,7 @@
       <a href="past.html">Past Mysteries</a>
       <a href="lore.html">Lore & Codex</a>
       <a href="stats.html">Stats</a>
+      <a href="premium.html>Premium</a>
     </nav>
       <div class="hamburger" id="hamburger-icon">
       &#9776;
@@ -88,6 +89,21 @@
     <p>&copy; Rhystic Games 2025</p>
   </footer>
   <script type="module" src="past.js"></script>
+  <script>
+  document.getElementById("hamburger-icon").addEventListener("click", function () {
+    const navLinks = document.querySelector(".nav-links");
+    const logo = document.querySelector(".logo");
+
+    navLinks.classList.toggle("active");
+
+    // Hide or show logo depending on menu state
+    if (navLinks.classList.contains("active")) {
+      logo.style.display = "none";
+    } else {
+      logo.style.display = "block";
+    }
+  });
+</script>
 </body>
 </html>
 
