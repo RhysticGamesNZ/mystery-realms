@@ -147,16 +147,17 @@
 
         document.getElementById("user-email").textContent = user.email;
 
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        if (userDoc.exists()) {
-          const data = userDoc.data();
-          document.getElementByID("user-level").textContent = data.level ?? "Seeker";
-          document.getElementById("user-premium").textContent = data.premium ? "Yes" : "No";
-          document.getElementById("user-streak").textContent = data.streak ?? 0;
-          document.getElementById("user-correct").textContent = data.correct ?? 0;
-          document.getElementById("user-incorrect").textContent = data.incorrect ?? 0;
-          document.getElementById("user-lore-read").textContent = data.loreRead ?? 0;
-        } else {
+const userDoc = await getDoc(doc(db, "users", user.uid));
+if (userDoc.exists()) {
+  const data = userDoc.data();
+  document.getElementById("user-level").textContent = data.level ?? "Seeker";
+  document.getElementById("user-premium").textContent = data.premium ? "Yes" : "No";
+  document.getElementById("user-streak").textContent = data.streak ?? 0;
+  document.getElementById("user-correct").textContent = data.correct ?? 0;
+  document.getElementById("user-incorrect").textContent = data.incorrect ?? 0;
+  document.getElementById("user-lore-read").textContent = data.loreRead ?? 0;
+}
+ else {
           document.getElementById("user-premium").textContent = "Unknown";
         }
       } else {
