@@ -325,7 +325,7 @@ fieldset label {
 
 #auth-container,
 #profile-container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 2rem auto;
   padding: 2rem;
   background-color: rgba(247, 240, 224, 0.95);
