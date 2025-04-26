@@ -12,13 +12,16 @@
       <div class="logo">
         <img src="./20250423_2137_Mystery Realms Icon_remix_01jsh03nwqfmjseat47yz3fnz5.png" alt="Mystery Realms Logo" />
       </div>
-      <nav class="nav-links">
-        <a href="index.html">Mystery</a>
-        <a href="past.html">Past Mysteries</a>
-        <a href="lore.html">Lore & Codex</a>
-        <a href="stats.html">Stats</a>
-        <a href="premium.html">Premium</a>
-      </nav>
+     <nav class="nav-links">
+      <a href="index.html">Mystery</a>
+      <a href="past.html">Past Mysteries</a>
+      <a href="lore.html">Lore & Codex</a>
+      <a href="stats.html">Stats</a>
+      <a href="premium.html">Premium</a>
+    </nav>
+     <div class="hamburger" id="hamburger-icon">
+      &#9776;
+    </div>
     </div>
   </header>
 
@@ -37,5 +40,20 @@
   </main>
 
   <script type="module" src="premium.js"></script>
+  <script>
+  document.getElementById("hamburger-icon").addEventListener("click", function () {
+    const navLinks = document.querySelector(".nav-links");
+    const logo = document.querySelector(".logo");
+
+    navLinks.classList.toggle("active");
+
+    // Hide or show logo depending on menu state
+    if (navLinks.classList.contains("active")) {
+      logo.style.display = "none";
+    } else {
+      logo.style.display = "block";
+    }
+  });
+</script>
 </body>
 </html>
