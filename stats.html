@@ -35,7 +35,7 @@
 </div>
     
   <main class="card parchment" id="auth-container">
-    <h2 id="auth-title>Sign In or Create an Account</h2>
+    <h2 id="auth-title">Sign In or Create an Account</h2>
     <form id="auth-form">
       <label>Email:</label><br />
       <input type="email" id="auth-email" required /><br /><br />
@@ -172,6 +172,8 @@ if (userDoc.exists()) {
   (adsbygoogle = window.adsbygoogle || []).push({});
   (adsbygoogle = window.adsbygoogle || []).push({});
   (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
 <script>
   document.getElementById("hamburger-icon").addEventListener("click", function () {
     const navLinks = document.querySelector(".nav-links");
@@ -179,7 +181,6 @@ if (userDoc.exists()) {
 
     navLinks.classList.toggle("active");
 
-    // Hide or show logo depending on menu state
     if (navLinks.classList.contains("active")) {
       logo.style.display = "none";
     } else {
