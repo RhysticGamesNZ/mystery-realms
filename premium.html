@@ -80,12 +80,13 @@
   });
 </script>
 
+<script src="https://js.stripe.com/v3/"></script>
+  
 <script type="module">
-  import { loadStripe } from "https://js.stripe.com/v3/";
 
   const checkoutButton = document.getElementById('checkout-button');
   checkoutButton.addEventListener('click', async () => {
-    const stripe = await loadStripe('pk_live_51RHbVmDN3UWo9IgN2cmBCfP9bB6UEW6sRwGiaEruXAz6XzCPurlzqcGJf8VYpb3a2I7G4cdUK6dBOv0MkjLAPgmv00s42wtmzi');
+    const stripe = await Stripe('pk_live_51RHbVmDN3UWo9IgN2cmBCfP9bB6UEW6sRwGiaEruXAz6XzCPurlzqcGJf8VYpb3a2I7G4cdUK6dBOv0MkjLAPgmv00s42wtmzi');
     
     // Disable the button and change text while processing
     checkoutButton.textContent = "Redirecting...";
