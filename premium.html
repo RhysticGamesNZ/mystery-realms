@@ -87,7 +87,7 @@
   checkoutButton.addEventListener('click', async () => {
     const stripe = await loadStripe('pk_test_51RHbVwDEyquBnH3fxOQIpJ9wKIzEkOXmJzDhCvUC31ZJ5qcfCxLehlXpXcyVrV0pRn4PifpnyhUJ5ZJJsVZ0Hbvl00BQAhKA6V');
     await stripe.redirectToCheckout({
-      lineItems: [{price: 'prod_SBzYfr36mbtClR', quantity: 1}],
+      lineItems: [{price: 'price_1RHbZ8DEyquBnH3fpFeN1R17', quantity: 1}],
       mode: 'subscription',
       successUrl: 'https://rhysticgamesnz.github.io/mystery-realms/stats.html',
       cancelUrl: 'https://rhysticgamesnz.github.io/mystery-realms/premium.html'
