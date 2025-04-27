@@ -2,52 +2,76 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Weekly Premium Mystery</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Premium Membership – Mystery Realms</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+<div id="site-content">
+
   <header class="site-header">
     <div class="header-container">
       <div class="logo">
         <img src="./20250423_2137_Mystery Realms Icon_remix_01jsh03nwqfmjseat47yz3fnz5.png" alt="Mystery Realms Logo" />
       </div>
-     <nav class="nav-links">
-      <a href="index.html">Mystery</a>
-      <a href="past.html">Past Mysteries</a>
-      <a href="lore.html">Lore & Codex</a>
-      <a href="stats.html">Stats</a>
-      <a href="premium.html">Premium</a>
-    </nav>
-     <div class="hamburger" id="hamburger-icon">
-      &#9776;
-    </div>
+      <nav class="nav-links">
+        <a href="index.html">Mystery</a>
+        <a href="past.html">Past Mysteries</a>
+        <a href="lore.html">Lore & Codex</a>
+        <a href="stats.html">Stats</a>
+        <a href="premium.html">Premium</a>
+      </nav>
+      <div class="hamburger" id="hamburger-icon">&#9776;</div>
     </div>
   </header>
 
-  <main class="card parchment" id="premium-container">
-    <h2 id="premium-title">Loading Premium Mystery...</h2>
-    <p id="premium-premise"></p>
-    <ul id="premium-clues"></ul>
+  <div class="page-wrapper">
+    <div id="ad-left" class="ad-left">
+      <ins class="adsbygoogle" style="display:block;width:120px;height:600px" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="1111111111"></ins>
+    </div>
 
-    <form id="vote-form" style="display:none;">
-      <fieldset id="premium-choices"></fieldset>
-      <button type="submit">Submit Your Decision</button>
-    </form>
+    <main class="card parchment">
+      <h2 style="text-align: center;">Unlock the Premium Mysteries</h2>
+      <p>Become a Premium Seeker and unlock:</p>
+      <ul style="padding-left: 1.5rem; margin-bottom: 2rem;">
+        <li>🕯️ Weekly Premium Mysteries every Monday</li>
+        <li>📜 Early access to lore expansions</li>
+        <li>⚡ No ads across the site</li>
+      </ul>
+      <div style="text-align: center;">
+        <button id="checkout-button" class="premium-button">Subscribe Now</button>
+      </div>
+    </main>
 
-    <div id="vote-result"></div>
-    <p id="vote-error" style="color:darkred;"></p>
-  </main>
+    <div id="ad-right" class="ad-right">
+      <ins class="adsbygoogle" style="display:block;width:120px;height:600px" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="2222222222"></ins>
+    </div>
+  </div>
 
-  <script type="module" src="premium.js"></script>
-  <script>
+  <div id="ad-bottom" class="ad-bottom">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="3333333333" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; Rhystic Games 2025</p>
+  </footer>
+
+</div>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({});
+  (adsbygoogle = window.adsbygoogle || []).push({});
+  (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+  
+<script>
   document.getElementById("hamburger-icon").addEventListener("click", function () {
     const navLinks = document.querySelector(".nav-links");
     const logo = document.querySelector(".logo");
 
     navLinks.classList.toggle("active");
 
-    // Hide or show logo depending on menu state
     if (navLinks.classList.contains("active")) {
       logo.style.display = "none";
     } else {
@@ -55,5 +79,21 @@
     }
   });
 </script>
+
+<script type="module">
+  import { loadStripe } from "https://js.stripe.com/v3/";
+
+  const checkoutButton = document.getElementById('checkout-button');
+  checkoutButton.addEventListener('click', async () => {
+    const stripe = await loadStripe('YOUR_STRIPE_PUBLIC_KEY');
+    await stripe.redirectToCheckout({
+      lineItems: [{price: 'YOUR_PRICE_ID', quantity: 1}],
+      mode: 'subscription',
+      successUrl: 'https://rhysticgamesnz.github.io/mystery-realms/stats.html',
+      cancelUrl: 'https://rhysticgamesnz.github.io/mystery-realms/premium.html'
+    });
+  });
+</script>
+
 </body>
 </html>
