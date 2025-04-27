@@ -86,14 +86,30 @@
   const checkoutButton = document.getElementById('checkout-button');
   checkoutButton.addEventListener('click', async () => {
     const stripe = await loadStripe('pk_live_51RHbVmDN3UWo9IgN2cmBCfP9bB6UEW6sRwGiaEruXAz6XzCPurlzqcGJf8VYpb3a2I7G4cdUK6dBOv0MkjLAPgmv00s42wtmzi');
-    await stripe.redirectToCheckout({
-      lineItems: [{price: 'price_1RIKt2DN3UWo9IgNhJaL8v1L', quantity: 1}],
-      mode: 'subscription',
-      successUrl: 'https://rhysticgamesnz.github.io/mystery-realms/stats.html',
-      cancelUrl: 'https://rhysticgamesnz.github.io/mystery-realms/premium.html'
-    });
+    
+    // Disable the button and change text while processing
+    checkoutButton.textContent = "Redirecting...";
+    checkoutButton.disabled = true;
+
+    try {
+      // Redirect to Stripe Checkout
+      const { error } = await stripe.redirectToCheckout({
+        lineItems: [{ price: 'price_1RIKt2DN3UWo9IgNhJaL8v1L', quantity: 1 }],
+        mode: 'subscription',
+        successUrl: 'https://rhysticgamesnz.github.io/mystery-realms/stats.html',
+        cancelUrl: 'https://rhysticgamesnz.github.io/mystery-realms/premium.html',
+      });
+
+      if (error) {
+        console.error("Error redirecting to checkout: ", error);
+        // You could add additional handling here (like displaying an error message to the user)
+      }
+    } catch (err) {
+      console.error("Unexpected error: ", err);
+    }
   });
 </script>
+
 
 </body>
 </html>
