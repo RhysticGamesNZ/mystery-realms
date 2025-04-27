@@ -123,6 +123,7 @@
         try {
           await createUserWithEmailAndPassword(auth, email, password);
           await setDoc(doc(db, "users", auth.currentUser.uid), {
+            email: auth.currentUser.email,
             premium: false,
             level: "Apprentice Seeker",
             streak: 0,
