@@ -99,40 +99,8 @@ Each day, a new arcane mystery awaits you. Gather clues, consult the archives, a
   </div>
 </div>
   
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+<script type="module" src="./hide-ads.js"></script>
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDXY7DEhinmbYLQ7zBRgEUJoc_eRsp-aNU",
-    authDomain: "mystery-realms.firebaseapp.com",
-    projectId: "mystery-realms",
-    storageBucket: "mystery-realms.firebasestorage.app",
-    messagingSenderId: "511471364499",
-    appId: "1:511471364499:web:fbc7d813e9b8d28cf32066",
-    measurementId: "G-ELW3HVV36V"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const docSnap = await getDoc(doc(db, "users", user.uid));
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
-        if (userData.premium === true) {
-          document.getElementById("ad-left")?.remove();
-          document.getElementById("ad-right")?.remove();
-          document.getElementById("ad-bottom")?.remove();
-          document.getElementById("premium-cta")?.remove();
-        }
-      }
-    }
-  });
-</script>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <script>
   (adsbygoogle = window.adsbygoogle || []).push({});
