@@ -1,8 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { Timestamp, query, where, collection, getDocs, setDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
-import {
-  getAuth, onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import { getFirestore, Timestamp, query, where, collection, getDocs, getDoc, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDXY7DEhinmbYLQ7zBRgEUJoc_eRsp-aNU",
@@ -25,16 +23,6 @@ const form = document.getElementById("vote-form");
 const result = document.getElementById("vote-result");
 const error = document.getElementById("vote-error");
 
-function getCurrentWeekKey() {
-  const now = new Date();
-  now.setUTCHours(0,0,0,0);
-  const year = now.getUTCFullYear();
-  const firstJan = new Date(Date.UTC(year, 0, 1));
-  const dayOfYear = Math.floor((now - firstJan) / (1000 * 60 * 60 * 24));
-  const weekNumber = Math.ceil((dayOfYear + firstJan.getUTCDay() + 1) / 7);
-  return `${year}-W${weekNumber}`;
-}
-
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     title.textContent = "Premium Access Required";
@@ -49,45 +37,50 @@ onAuthStateChanged(auth, async (user) => {
     return;
   }
 
-// Get this week’s Monday 00:00 UTC+12
-const now = new Date();
-const utcPlus12 = new Date(now.getTime() + (12 * 60 * 60 * 1000));
-const monday = new Date(utcPlus12);
-monday.setUTCDate(monday.getUTCDate() - ((monday.getUTCDay() + 6) % 7));
-monday.setUTCHours(0, 0, 0, 0);
-const mondayTimestamp = Timestamp.fromDate(monday);
+  // Get this week’s Monday 00:00 UTC+12
+  const now = new Date();
+  const utcPlus12 = new Date(now.getTime() + (12 * 60 * 60 * 1000));
+  const monday = new Date(utcPlus12);
+  monday.setUTCDate(monday.getUTCDate() - ((monday.getUTCDay() + 6) % 7));
+  monday.setUTCHours(0, 0, 0, 0);
+  const mondayTimestamp = Timestamp.fromDate(monday);
 
-// Query for the matching weekly mystery
-const weeklyQuery = query(
-  collection(db, "weeklyMysteries"),
-  where("date", "==", mondayTimestamp)
-);
+  const weeklyQuery = query(
+    collection(db, "weeklyMysteries"),
+    where("date", "==", mondayTimestamp)
+  );
 
-const snapshot = await getDocs(weeklyQuery);
-if (snapshot.empty) {
-  title.textContent = "Mystery Not Available";
-  return;
-}
+  const snapshot = await getDocs(weeklyQuery);
+  if (snapshot.empty) {
+    title.textContent = "Mystery Not Available";
+    return;
+  }
 
-const mysteryDoc = snapshot.docs[0];
-const data = mysteryDoc.data();
-const docId = mysteryDoc.id;
+  const mysteryDoc = snapshot.docs[0];
+  const data = mysteryDoc.data();
+  const docId = mysteryDoc.id;
 
-
-  const data = mysterySnap.data();
   title.textContent = data.title;
   premise.textContent = data.premise;
 
-  const today = new Date().getUTCDay(); // 0 (Sun) - 6 (Sat)
-  const clues = [
-    data.day1clue, data.day2clue, data.day3clue,
-    data.day4clue, data.day5clue
-  ];
-  for (let i = 0; i < today && i < clues.length; i++) {
+const today = new Date().getUTCDay(); // Sunday=0, Monday=1, ..., Saturday=6
+const clues = [
+  { text: data.day1clue, dayAvailable: 1 },
+  { text: data.day2clue, dayAvailable: 2 },
+  { text: data.day3clue, dayAvailable: 3 },
+  { text: data.day4clue, dayAvailable: 4 },
+  { text: data.day5clue, dayAvailable: 5 }
+];
+
+// Only show clues up to today
+clues.forEach((clue, index) => {
+  if (today >= clue.dayAvailable && clue.text) {
     const li = document.createElement("li");
-    li.textContent = clues[i];
+    li.textContent = clue.text;
+    li.classList.add('clue-reveal');
     cluesList.appendChild(li);
   }
+});
 
   if (today === 6) { // Saturday
     form.style.display = "block";
@@ -108,11 +101,10 @@ const docId = mysteryDoc.id;
       const selected = document.querySelector("input[name='weekly-choice']:checked");
       if (!selected) return;
 
-   await setDoc(doc(db, `weeklyMysteries/${docId}/votes/${user.uid}`), {
-  choice: selected.value,
-  timestamp: serverTimestamp()
-});
-
+      await setDoc(doc(db, `weeklyMysteries/${docId}/votes/${user.uid}`), {
+        choice: selected.value,
+        timestamp: serverTimestamp()
+      });
 
       result.innerHTML = "<p><strong>Thank you for voting. Your choice has been recorded.</strong></p>";
       form.style.display = "none";
