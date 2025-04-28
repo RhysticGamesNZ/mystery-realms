@@ -114,6 +114,56 @@ fieldset {
   padding: 0;
 }
 
+/* ========== PROFILE PAGE (STATS) ========== */
+#auth-container,
+#profile-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: rgba(247, 240, 224, 0.95);
+  border: 2px solid #66401A;
+  border-radius: 15px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+}
+
+.profile-flex {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.user-image {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  background-color: #f4e8d8;
+  padding: 10px;
+}
+
+.stats-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.stats-info p {
+  margin-bottom: 0.75rem;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+}
+
+.stat-image {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  margin-right: 8px;
+  opacity: 0.85;
+  filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.2));
+}
+
 /* ========== CLUE BLOCKS ========== */
 .clue-block {
   margin-bottom: 2rem;
@@ -151,6 +201,51 @@ button, .premium-button {
 
 button:hover, .premium-button:hover {
   background-color: #a33833;
+  transform: translateY(-2px);
+}
+
+#mystery-form button {
+  display: block;
+  margin: 2rem auto 0 auto;
+  padding: 0.75rem 1.5rem;
+  font-family: 'IM Fell English', serif;
+  font-size: 1rem;
+  background-color: #822E2B;
+  color: #f7f0e0;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: center;
+  box-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#mystery-form button:hover {
+  background-color: #a33833;
+  box-shadow: 0 0 12px rgba(221, 191, 130, 0.8);
+  transform: translateY(-2px);
+}
+
+#logout-btn {
+  padding: 0.75rem 1.5rem;
+  font-family: 'IM Fell English', serif;
+  font-size: 1rem;
+  background-color: #822E2B;
+  color: #f7f0e0;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 2rem;
+  display: block;
+  width: 100%;
+  text-align: center;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+#logout-btn:hover {
+  background-color: #a33833;
+  box-shadow: 0 0 12px rgba(221, 191, 130, 0.8);
   transform: translateY(-2px);
 }
 
