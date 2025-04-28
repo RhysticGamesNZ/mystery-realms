@@ -11,34 +11,67 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+
+const db = getFirestore();
+const container = document.getElementById("past-container");
 
 async function loadPastMysteries() {
-  const container = document.getElementById("past-container");
-  const q = query(collection(db, "mysteries"), orderBy("date", "desc"));
-  const snapshot = await getDocs(q);
-
-  // Get today at 00:00 UTC
   const today = new Date();
-  today.setUTCHours(0, 0, 0, 0);
-  const todayTimestamp = Timestamp.fromDate(today);
+  const mysteriesByMonth = {};
 
-  snapshot.forEach(doc => {
+  const querySnapshot = await getDocs(collection(db, "mysteries"));
+  
+  querySnapshot.forEach(doc => {
     const data = doc.data();
-    const id = doc.id;
 
-    // ✅ Skip today's and future mysteries
-    if (!data.date || data.date.toMillis() >= todayTimestamp.toMillis()) return;
+    // ✅ Only include mysteries with a date <= today
+    if (data.date.toDate() <= today) {
+      const dateObj = data.date.toDate();
+      const monthYear = `${dateObj.toLocaleString('default', { month: 'long' })} ${dateObj.getFullYear()}`;
 
-    // ✅ Add link
-    const link = document.createElement("a");
-    link.href = `index.html?id=${id}`;
-    link.textContent = data.title;
-    link.className = "mystery-link";
+      if (!mysteriesByMonth[monthYear]) {
+        mysteriesByMonth[monthYear] = [];
+      }
+      mysteriesByMonth[monthYear].push({ id: doc.id, title: data.title });
+    }
+  });
 
-    const wrapper = document.createElement("div");
-    wrapper.appendChild(link);
-    container.appendChild(wrapper);
+  // Sort months by newest first
+  const sortedMonths = Object.keys(mysteriesByMonth).sort((a, b) => {
+    const dateA = new Date(a);
+    const dateB = new Date(b);
+    return dateB - dateA;
+  });
+
+  sortedMonths.forEach(monthYear => {
+    const details = document.createElement('details');
+    const summary = document.createElement('summary');
+    summary.textContent = monthYear;
+    details.appendChild(summary);
+
+    const contentWrapper = document.createElement('div');
+    contentWrapper.className = 'content-wrapper'; // for smooth open/close
+
+    mysteriesByMonth[monthYear].forEach(mystery => {
+      const link = document.createElement('a');
+      link.href = `index.html?id=${mystery.id}`;
+      link.className = 'mystery-link';
+      link.textContent = mystery.title;
+      contentWrapper.appendChild(link);
+    });
+
+    details.appendChild(contentWrapper);
+
+    // Accordion: close other open sections
+    summary.addEventListener('click', (e) => {
+      document.querySelectorAll('#past-container details').forEach(d => {
+        if (d !== details) {
+          d.removeAttribute('open');
+        }
+      });
+    });
+
+    container.appendChild(details);
   });
 }
 
