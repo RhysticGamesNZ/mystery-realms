@@ -235,7 +235,7 @@ fieldset label {
   
   .nav-links {
     display: none;
-    flex-direction: row; /* 👈 row instead of column */
+    flex-direction: column; /* 👈 row instead of column */
     justify-content: center; /* 👈 centers items horizontally */
     align-items: center;
     width: 100%;
