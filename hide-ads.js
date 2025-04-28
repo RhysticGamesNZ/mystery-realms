@@ -1,4 +1,5 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+// hide-ads.js
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
@@ -11,11 +12,15 @@ const firebaseConfig = {
   appId: "1:511471364499:web:fbc7d813e9b8d28cf32066"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+// ✅ Only initialize Firebase if not already initialized
+if (!getApps().length) {
+  initializeApp(firebaseConfig);
+}
 
-// Wait for user login state
+const db = getFirestore();
+const auth = getAuth();
+
+// Hide ads if premium
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     const userDoc = await getDoc(doc(db, "users", user.uid));
