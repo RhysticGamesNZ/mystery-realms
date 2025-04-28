@@ -72,6 +72,8 @@ h1 {
   color: #FFDBC5;
 }
 footer {
+  display: flex;
+  justify-content: space-between;
   text-align: center;
   background-color: #822E2B;
   color: #F7F0E0;
