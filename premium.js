@@ -51,20 +51,23 @@ onAuthStateChanged(auth, async (user) => {
 async function loadWeeklyMystery(userId) {
   console.log("🔎 Loading weekly mystery...");
 
-  // Find current week's Monday UTC+12
+  // PURE UTC Monday
   const now = new Date();
-  const utcPlus12 = new Date(now.getTime() + (12 * 60 * 60 * 1000));
-  const monday = new Date(utcPlus12);
-  monday.setUTCDate(monday.getUTCDate() - ((monday.getUTCDay() + 6) % 7));
+  const day = now.getUTCDay(); // 0 = Sunday, 1 = Monday
+  const diffToMonday = (day === 0) ? -6 : 1 - day; // If Sunday (-6), else (1 - day)
+
+  const monday = new Date(now);
+  monday.setUTCDate(now.getUTCDate() + diffToMonday);
   monday.setUTCHours(0, 0, 0, 0);
+  
   const mondayTimestamp = Timestamp.fromDate(monday);
 
   const nextMonday = new Date(monday);
   nextMonday.setUTCDate(nextMonday.getUTCDate() + 7);
   const nextMondayTimestamp = Timestamp.fromDate(nextMonday);
 
-  console.log("🗓️ Calculated Monday:", monday.toISOString());
-  console.log("🗓️ Calculated Next Monday:", nextMonday.toISOString());
+  console.log("🗓️ Correct Monday:", monday.toISOString());
+  console.log("🗓️ Correct Next Monday:", nextMonday.toISOString());
 
   const weeklyQuery = query(
     collection(db, "weeklyMysteries"),
