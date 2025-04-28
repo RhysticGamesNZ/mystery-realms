@@ -229,27 +229,34 @@ fieldset label {
     flex-direction: column;
     align-items: center;
   }
-  main { margin-left: auto; margin-right: auto; }
-   .nav-links {
-    display: none; /* Hide navigation links on mobile */
-    flex-direction: column;
+  main {
+    margin-left: auto; margin-right: auto;
+  }
+  
+  .nav-links {
+    display: none;
+    flex-direction: row; /* 👈 row instead of column */
+    justify-content: center; /* 👈 centers items horizontally */
+    align-items: center;
     width: 100%;
-    text-align: center;
+    gap: 1rem;
+    background-color: #822E2B; /* optional: menu background */
+    padding: 0.5rem 0;
   }
 
   .nav-links a {
-    margin: 1rem 0; /* Space out the links */
+    margin: 0; /* no vertical margins */
+    padding: 0.5rem 1rem;
   }
 
+  .nav-links.active {
+    display: flex;
+  }
   .hamburger {
     display: block; /* Show hamburger icon on mobile */
   }
 
-  .nav-links.active {
-    display: flex; /* Show navigation links when the "active" class is added */
-  }
-
-    #user-email {
+  #user-email {
     max-width: 90%;
     overflow: hidden;
     text-overflow: ellipsis;
