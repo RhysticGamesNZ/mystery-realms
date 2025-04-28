@@ -48,20 +48,28 @@ onAuthStateChanged(auth, async (user) => {
 
 async function loadWeeklyMystery(userId) {
   // Find current week's Monday UTC+12
-  const now = new Date();
-  const utcPlus12 = new Date(now.getTime() + (12 * 60 * 60 * 1000));
-  const day = utcPlus12.getUTCDay(); // Sunday=0
-  const monday = new Date(utcPlus12);
-  monday.setUTCDate(monday.getUTCDate() - ((day + 6) % 7));
-  monday.setUTCHours(0, 0, 0, 0);
-  const mondayTimestamp = Timestamp.fromDate(monday);
+const now = new Date();
+const utcPlus12 = new Date(now.getTime() + (12 * 60 * 60 * 1000));
 
-  const q = query(
-    collection(db, "weeklyMysteries"),
-    where("date", "==", mondayTimestamp)
-  );
+// Find current week's Monday
+const monday = new Date(utcPlus12);
+monday.setUTCDate(monday.getUTCDate() - ((monday.getUTCDay() + 6) % 7));
+monday.setUTCHours(0, 0, 0, 0);
+const mondayTimestamp = Timestamp.fromDate(monday);
 
-  const snapshot = await getDocs(q);
+// Find next week's Monday
+const nextMonday = new Date(monday);
+nextMonday.setUTCDate(nextMonday.getUTCDate() + 7);
+const nextMondayTimestamp = Timestamp.fromDate(nextMonday);
+
+// Now query mysteries between this Monday and next Monday
+const weeklyQuery = query(
+  collection(db, "weeklyMysteries"),
+  where("date", ">=", mondayTimestamp),
+  where("date", "<", nextMondayTimestamp)
+);
+
+const snapshot = await getDocs(weeklyQuery);
   if (snapshot.empty) {
     title.textContent = "Mystery Not Available Yet.";
     return;
