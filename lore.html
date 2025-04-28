@@ -110,31 +110,31 @@
     <p>&copy; Rhystic Games 2025</p>
     <a href='https://ko-fi.com/G2G81E6E2Y' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi1.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
   </footer>
-  <script type="module" src="lore.js"></script>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  
+<script type="module" src="lore.js"></script>
+  
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  
 <script>
-  (adsbygoogle = window.adsbygoogle || []).push({});
-  (adsbygoogle = window.adsbygoogle || []).push({});
   (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 
+<!-- Hamburger Menu Fix -->
 <script>
-  document.getElementById("hamburger-icon").addEventListener("click", function () {
+  document.addEventListener("DOMContentLoaded", function () {
+    const hamburgerIcon = document.getElementById("hamburger-icon");
     const navLinks = document.querySelector(".nav-links");
     const logo = document.querySelector(".logo");
 
-    navLinks.classList.toggle("active");
-
-    // Hide or show logo depending on menu state
-    if (navLinks.classList.contains("active")) {
-      logo.style.display = "none";
-    } else {
-      logo.style.display = "block";
-    }
+    hamburgerIcon.addEventListener("click", function () {
+      navLinks.classList.toggle("active");
+      logo.style.display = navLinks.classList.contains("active") ? "none" : "block";
+    });
   });
 </script>
-        
-  <script type="module">
+
+<!-- Hide ads for Premium -->
+<script type="module">
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
   import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
