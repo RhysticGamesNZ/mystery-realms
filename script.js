@@ -1,6 +1,28 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import { getFirestore, collection, query, where, getDocs, getDoc, doc, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
+window.addEventListener("DOMContentLoaded", () => {
+  const modal = document.getElementById("welcome-modal");
+  const closeBtn = document.getElementById("close-welcome");
+  const siteContent = document.getElementById("site-content");
+
+  const welcomeSeen = localStorage.getItem("mystery-welcome-seen");
+
+  if (welcomeSeen === "true") {
+    modal.classList.remove("show");
+    siteContent.classList.remove("dimmed");
+  } else {
+    modal.classList.add("show");
+    siteContent.classList.add("dimmed");
+  }
+
+  closeBtn.addEventListener("click", () => {
+    modal.classList.remove("show");
+    siteContent.classList.remove("dimmed");
+    localStorage.setItem("mystery-welcome-seen", "true");
+  });
+});
+
 const firebaseConfig = {
   apiKey: "AIzaSyDXY7DEhinmbYLQ7zBRgEUJoc_eRsp-aNU",
   authDomain: "mystery-realms.firebaseapp.com",
@@ -13,31 +35,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
-window.addEventListener("DOMContentLoaded", () => {
-  const modal = document.getElementById("welcome-modal");
-  const closeBtn = document.getElementById("close-welcome");
-  const siteContent = document.getElementById("site-content");
-
-  try {
-    const alreadySeen = localStorage.getItem("mystery-welcome-seen");
-    console.log("🔍 Welcome Seen Value:", alreadySeen);
-
-    if (!alreadySeen) {
-      modal.style.display = "flex";
-      siteContent.classList.add("dimmed");
-    }
-
-    closeBtn?.addEventListener("click", () => {
-      modal.style.display = "none";
-      siteContent.classList.remove("dimmed");
-      localStorage.setItem("mystery-welcome-seen", "true");
-      console.log("✅ Welcome modal dismissed");
-    });
-  } catch (e) {
-    console.warn("⚠️ localStorage access failed:", e);
-  }
-});
 
 function formatText(text) {
   return text
