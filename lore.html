@@ -6,66 +6,10 @@
   <title>Lore Archive</title>
   <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" /> 
-  <style>
-#lore-container details {
-  margin-bottom: 1rem;
-  padding: 0.5rem;
-  border: 1px solid #b59a74;
-  border-radius: 6px;
-  background-color: #f3e9d2;
-  font-family: 'IM Fell English', serif;
-}
-
-#lore-container summary {
-  cursor: pointer;
-  font-weight: bold;
-  color: #5a3910;
-}
-
-#lore-container details details {
-  margin-left: 1rem;
-  margin-top: 0.5rem;
-}
-    .lore-category {
-      font-size: 1.5rem;
-      margin-top: 2rem;
-      color: #822E2B;
-    }
-    .lore-entry {
-      background-color: #f9f3df;
-      margin-bottom: 1rem;
-      transition: box-shadow 0.3s ease;
-    }
-    .lore-summary {
-      background: #e6dcc8;
-      padding: 0.75rem;
-      cursor: pointer;
-      font-weight: bold;
-      border-radius: 6px 6px 0 0;
-    }
-    .lore-details {
-      padding: 0.75rem;
-      display: none;
-    }
-    .lore-entry.open .lore-details {
-      display: block;
-    }
-    .lore-summary::after {
-       content: '▼';
-       float: right;
-       transform: rotate(0);
-       transition: transform 0.3s ease;
-    }
-    .lore-entry.open .lore-summary::after {
-       transform: rotate(180deg);
-    }
-    .lore-entry:hover {
-       box-shadow: 0 0 10px rgba(173, 123, 76, 0.6);
-    }
-  </style>
 </head>
 <body>
-    <header class="site-header">
+
+<header class="site-header">
   <div class="header-container">
     <div class="logo">
       <img src="./logo.png" alt="Mystery Realms Logo" />
@@ -77,49 +21,58 @@
       <a href="stats.html">Stats</a>
       <a href="premium.html">Premium</a>
     </nav>
-        <div class="hamburger" id="hamburger-icon">
-      &#9776;
-    </div>
+    <div class="hamburger" id="hamburger-icon">&#9776;</div>
   </div>
 </header>
+
 <div class="page-wrapper">
-<div id="ad-left" class="ad-left">
- <ins class="adsbygoogle"
-       style="display:block;width:120px;height:600px"
-       data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-       data-ad-slot="1111111111"></ins>
-</div>
-<main id="lore-container">
-    </main>
+
+  <div id="ad-left" class="ad-left">
+    <ins class="adsbygoogle"
+      style="display:block;width:120px;height:600px"
+      data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+      data-ad-slot="1111111111"></ins>
+  </div>
+
+  <main id="lore-container">
+    <!-- Lore Content injected dynamically -->
+  </main>
+
   <div id="ad-right" class="ad-right">
- <ins class="adsbygoogle"
-       style="display:block;width:120px;height:600px"
-       data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-       data-ad-slot="2222222222"></ins>
+    <ins class="adsbygoogle"
+      style="display:block;width:120px;height:600px"
+      data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+      data-ad-slot="2222222222"></ins>
+  </div>
+
 </div>
-</div>
+
 <div id="ad-bottom" class="ad-bottom">
   <ins class="adsbygoogle"
-       style="display:block"
-       data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-       data-ad-slot="3333333333"
-       data-ad-format="auto"
-       data-full-width-responsive="true"></ins>
+    style="display:block"
+    data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+    data-ad-slot="3333333333"
+    data-ad-format="auto"
+    data-full-width-responsive="true"></ins>
 </div>
-  <footer>
-    <p>&copy; Rhystic Games 2025</p>
-    <a href='https://ko-fi.com/G2G81E6E2Y' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi1.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
-  </footer>
-  
+
+<footer class="footer">
+  <p>&copy; Rhystic Games 2025</p>
+  <a href="https://ko-fi.com/G2G81E6E2Y" target="_blank">
+    <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi1.png?v=6" alt="Buy Me a Coffee at ko-fi.com" />
+  </a>
+</footer>
+
+<!-- Lore JavaScript -->
 <script type="module" src="lore.js"></script>
-  
+
+<!-- Ads -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-  
 <script>
   (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 
-<!-- Hamburger Menu Fix -->
+<!-- Hamburger Menu -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     const hamburgerIcon = document.getElementById("hamburger-icon");
@@ -133,10 +86,10 @@
   });
 </script>
 
-<!-- Hide ads for Premium -->
+<!-- Hide Ads for Premium Users -->
 <script type="module">
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
   const auth = getAuth();
   const db = getFirestore();
@@ -144,18 +97,14 @@
   onAuthStateChanged(auth, async (user) => {
     if (user) {
       const docSnap = await getDoc(doc(db, "users", user.uid));
-      if (docSnap.exists()) {
-        const userData = docSnap.data();
-        if (userData.premium === true) {
-          document.getElementById("ad-left")?.remove();
-          document.getElementById("ad-right")?.remove();
-          document.getElementById("ad-bottom")?.remove();
-        }
+      if (docSnap.exists() && docSnap.data().premium) {
+        document.getElementById("ad-left")?.remove();
+        document.getElementById("ad-right")?.remove();
+        document.getElementById("ad-bottom")?.remove();
       }
     }
   });
 </script>
+
 </body>
 </html>
-
-
