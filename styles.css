@@ -205,6 +205,17 @@ fieldset {
   font-weight: bold;
 }
 
+#past-container,
+#lore-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 1rem;
+  background-color: rgba(247, 240, 224, 0.95);
+  border: 2px solid #66401A;
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
+}
 /* ========== PROFILE PAGE (STATS) ========== */
 #auth-container,
 #profile-container {
