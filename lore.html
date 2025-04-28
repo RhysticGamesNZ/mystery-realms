@@ -63,10 +63,8 @@
   </a>
 </footer>
 
-<!-- Lore JavaScript -->
 <script type="module" src="lore.js"></script>
 
-<!-- Ads -->
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <script>
   (adsbygoogle = window.adsbygoogle || []).push({});
@@ -86,25 +84,7 @@
   });
 </script>
 
-<!-- Hide Ads for Premium Users -->
-<script type="module">
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-  import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
-
-  const auth = getAuth();
-  const db = getFirestore();
-
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const docSnap = await getDoc(doc(db, "users", user.uid));
-      if (docSnap.exists() && docSnap.data().premium) {
-        document.getElementById("ad-left")?.remove();
-        document.getElementById("ad-right")?.remove();
-        document.getElementById("ad-bottom")?.remove();
-      }
-    }
-  });
-</script>
-
+<script type="module" src="./hide-ads.js"></script>
+  
 </body>
 </html>
