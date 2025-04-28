@@ -428,3 +428,17 @@ fieldset label {
   max-width: 100%;
   display: inline-block;
 }
+
+/* Smooth fade-in for clues */
+.clue-reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: revealClue 0.8s ease forwards;
+}
+
+@keyframes revealClue {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
