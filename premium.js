@@ -93,41 +93,38 @@ async function loadWeeklyMystery(userId) {
   premise.textContent = data.premise;
   cluesList.innerHTML = "";
 
-  const today = (new Date()).getUTCDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
-  console.log("🕰️ Today (UTC):", today);
+  const today = (new Date()).getUTCDay(); // Sunday=0, Monday=1,..., Saturday=6
 
-  const clues = [
-    { day: 1, text: data.day1clue },
-    { day: 2, text: data.day2clue },
-    { day: 3, text: data.day3clue },
-    { day: 4, text: data.day4clue },
-    { day: 5, text: data.day5clue }
-  ];
+const clues = [
+  { day: 1, title: data.day1title, text: data.day1clue },
+  { day: 2, title: data.day2title, text: data.day2clue },
+  { day: 3, title: data.day3title, text: data.day3clue },
+  { day: 4, title: data.day4title, text: data.day4clue },
+  { day: 5, title: data.day5title, text: data.day5clue }
+];
 
-  clues.forEach(clue => {
-    if (today >= clue.day && clue.text) {
-      const li = document.createElement("li");
-      li.textContent = clue.text;
-      cluesList.appendChild(li);
-      console.log(`🧩 Showing clue for Day ${clue.day}`);
-    }
-  });
+// Clear previous clues
+cluesList.innerHTML = "";
 
-  if (today === 6) {
-    console.log("🗳️ Showing voting form (Saturday)");
-    form.style.display = "block";
-    choicesFieldset.innerHTML = "";
-    data.choices.forEach((choice, index) => {
-      const label = document.createElement("label");
-      const input = document.createElement("input");
-      input.type = "radio";
-      input.name = "premium-choice";
-      input.value = index;
-      if (index === 0) input.checked = true;
-      label.appendChild(input);
-      label.appendChild(document.createTextNode(choice));
-      choicesFieldset.appendChild(label);
-    });
+// Render only up to today’s clue
+clues.forEach((clue) => {
+  if (today >= clue.day && clue.text) {
+    const clueBlock = document.createElement('div');
+    clueBlock.className = "clue-block";
+
+    const title = document.createElement('h4');
+    title.className = "clue-title";
+    title.textContent = clue.title;
+
+    const paragraph = document.createElement('p');
+    paragraph.className = "clue-text";
+    paragraph.textContent = clue.text;
+
+    clueBlock.appendChild(title);
+    clueBlock.appendChild(paragraph);
+    cluesList.appendChild(clueBlock);
+  }
+});
 
     form.onsubmit = async (e) => {
       e.preventDefault();
