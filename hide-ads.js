@@ -29,6 +29,7 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById("ad-left")?.remove();
       document.getElementById("ad-right")?.remove();
       document.getElementById("ad-bottom")?.remove();
+      document.getElementById("premium-cta")?.remove();
     }
   }
 });
