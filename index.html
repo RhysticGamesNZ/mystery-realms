@@ -50,7 +50,7 @@
       <div id="mystery-result"></div>
     </section>
 
-    <section class="premium parchment">
+    <section class="premium parchment" id="premium-cta">
       <h2>Premium Weekly Mystery</h2>
       <p>Unlock deeper mysteries every Monday. Premium members only.</p>
       <button><a href="premium.html">Subscribe Now</a></button>
@@ -126,6 +126,7 @@ Each day, a new arcane mystery awaits you. Gather clues, consult the archives, a
           document.getElementById("ad-left")?.remove();
           document.getElementById("ad-right")?.remove();
           document.getElementById("ad-bottom")?.remove();
+          document.getElementById("premium-cta")?.remove();
         }
       }
     }
