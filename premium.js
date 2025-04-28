@@ -29,6 +29,7 @@ onAuthStateChanged(auth, async (user) => {
   if (!user) {
     checkoutContainer.style.display = "block";
     premiumContainer.style.display = "none";
+    console.log("User not signed in");
     return;
   }
 
@@ -36,10 +37,11 @@ onAuthStateChanged(auth, async (user) => {
   if (!userSnap.exists() || !userSnap.data().premium) {
     checkoutContainer.style.display = "block";
     premiumContainer.style.display = "none";
+    console.log("User is not premium");
     return;
   }
 
-  // User is premium
+  console.log("✅ User is premium");
   checkoutContainer.style.display = "none";
   premiumContainer.style.display = "block";
 
@@ -47,43 +49,49 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 async function loadWeeklyMystery(userId) {
+  console.log("🔎 Loading weekly mystery...");
+
   // Find current week's Monday UTC+12
-const now = new Date();
-const utcPlus12 = new Date(now.getTime() + (12 * 60 * 60 * 1000));
+  const now = new Date();
+  const utcPlus12 = new Date(now.getTime() + (12 * 60 * 60 * 1000));
+  const monday = new Date(utcPlus12);
+  monday.setUTCDate(monday.getUTCDate() - ((monday.getUTCDay() + 6) % 7));
+  monday.setUTCHours(0, 0, 0, 0);
+  const mondayTimestamp = Timestamp.fromDate(monday);
 
-// Find current week's Monday
-const monday = new Date(utcPlus12);
-monday.setUTCDate(monday.getUTCDate() - ((monday.getUTCDay() + 6) % 7));
-monday.setUTCHours(0, 0, 0, 0);
-const mondayTimestamp = Timestamp.fromDate(monday);
+  const nextMonday = new Date(monday);
+  nextMonday.setUTCDate(nextMonday.getUTCDate() + 7);
+  const nextMondayTimestamp = Timestamp.fromDate(nextMonday);
 
-// Find next week's Monday
-const nextMonday = new Date(monday);
-nextMonday.setUTCDate(nextMonday.getUTCDate() + 7);
-const nextMondayTimestamp = Timestamp.fromDate(nextMonday);
+  console.log("🗓️ Calculated Monday:", monday.toISOString());
+  console.log("🗓️ Calculated Next Monday:", nextMonday.toISOString());
 
-// Now query mysteries between this Monday and next Monday
-const weeklyQuery = query(
-  collection(db, "weeklyMysteries"),
-  where("date", ">=", mondayTimestamp),
-  where("date", "<", nextMondayTimestamp)
-);
+  const weeklyQuery = query(
+    collection(db, "weeklyMysteries"),
+    where("date", ">=", mondayTimestamp),
+    where("date", "<", nextMondayTimestamp)
+  );
 
-const snapshot = await getDocs(weeklyQuery);
+  const snapshot = await getDocs(weeklyQuery);
+  console.log(`📚 Mysteries found: ${snapshot.size}`);
+
   if (snapshot.empty) {
     title.textContent = "Mystery Not Available Yet.";
+    console.warn("⚠️ No mystery found between this Monday and next Monday.");
     return;
   }
 
   const mysteryDoc = snapshot.docs[0];
   const data = mysteryDoc.data();
   const docId = mysteryDoc.id;
+  console.log("✅ Loaded mystery:", docId, data);
 
   title.textContent = data.title;
   premise.textContent = data.premise;
   cluesList.innerHTML = "";
 
-  const today = (new Date()).getUTCDay(); // Sunday = 0, Saturday = 6
+  const today = (new Date()).getUTCDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
+  console.log("🕰️ Today (UTC):", today);
 
   const clues = [
     { day: 1, text: data.day1clue },
@@ -93,16 +101,17 @@ const snapshot = await getDocs(weeklyQuery);
     { day: 5, text: data.day5clue }
   ];
 
-  clues.forEach((clue, index) => {
+  clues.forEach(clue => {
     if (today >= clue.day && clue.text) {
       const li = document.createElement("li");
       li.textContent = clue.text;
       cluesList.appendChild(li);
+      console.log(`🧩 Showing clue for Day ${clue.day}`);
     }
   });
 
   if (today === 6) {
-    // Show voting
+    console.log("🗳️ Showing voting form (Saturday)");
     form.style.display = "block";
     choicesFieldset.innerHTML = "";
     data.choices.forEach((choice, index) => {
@@ -127,7 +136,7 @@ const snapshot = await getDocs(weeklyQuery);
         timestamp: serverTimestamp()
       });
 
-      result.innerHTML = `<p><strong>Thank you, Seeker. Your choice has been recorded.</strong></p>`;
+      result.innerHTML = `<p><strong>✅ Thank you, Seeker. Your choice has been recorded.</strong></p>`;
       form.style.display = "none";
     };
   } else {
