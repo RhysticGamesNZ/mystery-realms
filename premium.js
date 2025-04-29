@@ -1,14 +1,15 @@
-// premium.js
+// --- Imports ---
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import { getFirestore, collection, query, where, getDocs, doc, getDoc, setDoc, Timestamp, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { trackMysterySolved } from "./statsTracker.js"; // 🛡️ New import
 
 // --- Firebase Init ---
 const firebaseConfig = {
   apiKey: "AIzaSyDXY7DEhinmbYLQ7zBRgEUJoc_eRsp-aNU",
   authDomain: "mystery-realms.firebaseapp.com",
   projectId: "mystery-realms",
-  storageBucket: "mystery-realms.firebasestorage.app",
+  storageBucket: "mystery-realms.appspot.com",
   messagingSenderId: "511471364499",
   appId: "1:511471364499:web:fbc7d813e9b8d28cf32066"
 };
@@ -26,6 +27,11 @@ const cluesList = document.getElementById("mystery-clues");
 const choicesFieldset = document.getElementById("mystery-choices");
 const form = document.getElementById("mystery-form");
 const result = document.getElementById("mystery-result");
+
+// --- Utility ---
+function formatText(text) {
+  return text.split("\n").map(line => `<p>${line.trim()}</p>`).join("");
+}
 
 // --- Authentication ---
 onAuthStateChanged(auth, async (user) => {
@@ -47,23 +53,16 @@ onAuthStateChanged(auth, async (user) => {
   console.log("✅ User is premium");
   checkoutContainer.style.display = "none";
   premiumContainer.style.display = "block";
+
   loadWeeklyMystery(user.uid);
 });
-
-function formatText(text) {
-  return text
-    .split("\n")
-    .map(line => `<p>${line.trim()}</p>`)
-    .join("");
-}
 
 // --- Load Weekly Mystery ---
 async function loadWeeklyMystery(userId) {
   console.log("🔎 Loading weekly mystery...");
 
-  // Find this week's Monday UTC
   const now = new Date();
-  const day = now.getUTCDay(); // 0 (Sunday) to 6 (Saturday)
+  const day = now.getUTCDay();
   const diffToMonday = (day === 0) ? -6 : 1 - day;
   const monday = new Date(now);
   monday.setUTCDate(now.getUTCDate() + diffToMonday);
@@ -103,33 +102,32 @@ async function loadWeeklyMystery(userId) {
 
   const today = (new Date()).getUTCDay();
 
-  // Structured clues with titles
   const clues = [
     { day: 1, title: data.day1title, text: data.day1clue },
     { day: 2, title: data.day2title, text: data.day2clue },
     { day: 3, title: data.day3title, text: data.day3clue },
     { day: 4, title: data.day4title, text: data.day4clue },
-    { day: 5, title: data.day5title, text: data.day5clue }
+    { day: 5, title: data.day5clue, text: data.day5clue }
   ];
 
-clues.forEach((clue) => {
-  if (today >= clue.day && clue.text) {
-    const clueBlock = document.createElement('div');
-    clueBlock.className = "clue-block";
+  clues.forEach((clue) => {
+    if (today >= clue.day && clue.text) {
+      const clueBlock = document.createElement('div');
+      clueBlock.className = "clue-block";
 
-    const h4 = document.createElement('h4');
-    h4.className = "clue-title";
-    h4.textContent = clue.title;
+      const h4 = document.createElement('h4');
+      h4.className = "clue-title";
+      h4.textContent = clue.title;
 
-    const clueText = document.createElement('div');
-    clueText.className = "clue-text";
-    clueText.innerHTML = formatText(clue.text);
+      const p = document.createElement('div');
+      p.className = "clue-text";
+      p.innerHTML = formatText(clue.text);
 
-    clueBlock.appendChild(h4);
-    clueBlock.appendChild(clueText);
-    cluesList.appendChild(clueBlock);
-  }
-});
+      clueBlock.appendChild(h4);
+      clueBlock.appendChild(p);
+      cluesList.appendChild(clueBlock);
+    }
+  });
 
   // --- Voting ---
   if (today === 6) { // Saturday
@@ -157,6 +155,9 @@ clues.forEach((clue) => {
         choice: parseInt(selected.value),
         timestamp: serverTimestamp()
       });
+
+      // 📈 Track as mystery solved + increment streak
+      await trackMysterySolved(db, userId);
 
       result.innerHTML = `<p><strong>✅ Thank you, Seeker. Your choice has been recorded.</strong></p>`;
       form.style.display = "none";
