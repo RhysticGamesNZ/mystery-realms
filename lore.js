@@ -1,7 +1,16 @@
 // lore.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
-import { firebaseConfig } from "./firebase-config.js"; // adjust if needed
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDXY7DEhinmbYLQ7zBRgEUJoc_eRsp-aNU",
+  authDomain: "mystery-realms.firebaseapp.com",
+  projectId: "mystery-realms",
+  storageBucket: "mystery-realms.firebasestorage.app",
+  messagingSenderId: "511471364499",
+  appId: "1:511471364499:web:fbc7d813e9b8d28cf32066",
+  measurementId: "G-ELW3HVV36V"
+};
 
 // Init Firebase
 const app = initializeApp(firebaseConfig);
