@@ -56,17 +56,25 @@ async function loadLore() {
       innerWrapper.className = "content-wrapper";
 
       loreByCategory[categoryName].forEach(entry => {
-        const entryDetails = document.createElement("details");
-        const entrySummary = document.createElement("summary");
-        entrySummary.textContent = entry.title;
-        entryDetails.appendChild(entrySummary);
+        const entryWrapper = document.createElement("div");
+        entryWrapper.className = "lore-entry";
 
-        const entryContent = document.createElement("div");
-        entryContent.innerHTML = formatText(entry.details);
-        entryContent.className = "lore-details";
+const entryHeader = document.createElement("div");
+entryHeader.className = "lore-title";
+entryHeader.textContent = entry.title;
 
-        entryDetails.appendChild(entryContent);
-        innerWrapper.appendChild(entryDetails);
+const entryContent = document.createElement("div");
+entryContent.className = "lore-details hidden"; // hidden by default
+entryContent.innerHTML = formatText(entry.details);
+
+// Toggle visibility
+entryHeader.addEventListener("click", () => {
+  entryContent.classList.toggle("hidden");
+});
+
+entryWrapper.appendChild(entryHeader);
+entryWrapper.appendChild(entryContent);
+innerWrapper.appendChild(entryWrapper);
       });
 
       categoryDetails.appendChild(innerWrapper);
