@@ -1,6 +1,6 @@
 // --- Imports ---
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { getFirestore, collection, query, where, getDocs, doc, getDoc, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 import { trackCorrectGuess, trackIncorrectGuess, trackMysterySolved } from "./statsTracker.js";
 
@@ -48,7 +48,7 @@ onAuthStateChanged(auth, async (user) => {
 async function loadMystery(user) {
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
-  const todayTimestamp = today.getTime();
+  const todayTimestamp = Timestamp.fromDate(today); // fixed
 
   const mysteriesRef = collection(db, "mysteries");
   const q = query(mysteriesRef, where("date", "==", todayTimestamp));
