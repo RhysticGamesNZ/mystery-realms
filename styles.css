@@ -389,6 +389,17 @@ fieldset {
   box-shadow: 0 0 12px rgba(221, 191, 130, 0.8);
 }
 
+#forgot-password-link {
+  font-size: 0.9rem;
+  color: #5a3910;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#forgot-password-link:hover {
+  color: #7d4c22;
+  text-decoration: none;
+}
 
 /* ========== CLUE BLOCKS ========== */
 .clue-block {
