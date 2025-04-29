@@ -14,13 +14,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-function formatText(text) {
-  return text
-    .split("\n")
-    .map(line => `<p>${line.trim()}</p>`)
-    .join("");
-}
-
 // Elements
 const container = document.getElementById("lore-container");
 
@@ -77,8 +70,12 @@ function renderLore(loreData) {
 
       const loreDetails = document.createElement("div");
       loreDetails.className = "lore-details";
-      loreDetails.textContent = formatText(entry.details);
-
+      
+      loreDetails.innerHTML = entry.details
+          .split('\n\n') // split into paragraphs (2 newlines)
+          .map(paragraph => `<p>${paragraph.trim()}</p>`)
+          .join('');
+      
       loreEntry.appendChild(loreSummary);
       loreEntry.appendChild(loreDetails);
       contentWrapper.appendChild(loreEntry);
