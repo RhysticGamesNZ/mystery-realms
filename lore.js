@@ -1,6 +1,7 @@
-// lore.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import { trackLoreRead } from "./statsTracker.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDXY7DEhinmbYLQ7zBRgEUJoc_eRsp-aNU",
@@ -12,23 +13,21 @@ const firebaseConfig = {
   measurementId: "G-ELW3HVV36V"
 };
 
-// Init Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
-// Format text (preserve paragraph breaks)
 function formatText(text) {
   if (!text) return "";
   return text.split("\n").map(line => `<p>${line.trim()}</p>`).join("");
 }
 
-// Load Lore
-async function loadLore() {
+async function loadLore(user) {
   const container = document.getElementById("lore-container");
+  const readSet = new Set(); // Prevent multiple counts per entry this session
 
   try {
     const snapshot = await getDocs(collection(db, "lore"));
-
     const loreByCategory = {};
 
     snapshot.forEach(docSnap => {
@@ -43,7 +42,6 @@ async function loadLore() {
       });
     });
 
-    // Sort categories alphabetically
     const sortedCategories = Object.keys(loreByCategory).sort();
 
     sortedCategories.forEach(categoryName => {
@@ -59,33 +57,36 @@ async function loadLore() {
         const entryWrapper = document.createElement("div");
         entryWrapper.className = "lore-entry";
 
-const entryHeader = document.createElement("div");
-entryHeader.className = "lore-title";
-entryHeader.textContent = entry.title;
+        const entryHeader = document.createElement("div");
+        entryHeader.className = "lore-title";
+        entryHeader.textContent = entry.title;
 
-const entryContent = document.createElement("div");
-entryContent.className = "lore-details hidden"; // hidden by default
-entryContent.innerHTML = formatText(entry.details);
+        const entryContent = document.createElement("div");
+        entryContent.className = "lore-details hidden";
+        entryContent.innerHTML = formatText(entry.details);
 
-// Toggle visibility
-entryHeader.addEventListener("click", () => {
-  // Close all other entries within the same category
-  innerWrapper.querySelectorAll(".lore-entry").forEach(entry => {
-    if (entry !== entryWrapper) {
-      entry.classList.remove("open");
-      entry.querySelector(".lore-details").classList.add("hidden");
-    }
-  });
+        entryHeader.addEventListener("click", async () => {
+          innerWrapper.querySelectorAll(".lore-entry").forEach(entryEl => {
+            if (entryEl !== entryWrapper) {
+              entryEl.classList.remove("open");
+              entryEl.querySelector(".lore-details").classList.add("hidden");
+            }
+          });
 
-  // Toggle current entry
-  entryWrapper.classList.toggle("open");
-  entryContent.classList.toggle("hidden");
-});
+          entryWrapper.classList.toggle("open");
+          entryContent.classList.toggle("hidden");
 
+          // 🧠 Track lore read ONCE per session per title
+          const loreKey = `${categoryName}-${entry.title}`;
+          if (user && !readSet.has(loreKey)) {
+            await trackLoreRead(db, user.uid);
+            readSet.add(loreKey);
+          }
+        });
 
-entryWrapper.appendChild(entryHeader);
-entryWrapper.appendChild(entryContent);
-innerWrapper.appendChild(entryWrapper);
+        entryWrapper.appendChild(entryHeader);
+        entryWrapper.appendChild(entryContent);
+        innerWrapper.appendChild(entryWrapper);
       });
 
       categoryDetails.appendChild(innerWrapper);
@@ -97,5 +98,7 @@ innerWrapper.appendChild(entryWrapper);
   }
 }
 
-// Start
-loadLore();
+// 🔐 Auth check before loading lore
+onAuthStateChanged(auth, (user) => {
+  loadLore(user);
+});
