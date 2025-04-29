@@ -50,6 +50,13 @@ onAuthStateChanged(auth, async (user) => {
   loadWeeklyMystery(user.uid);
 });
 
+function formatText(text) {
+  return text
+    .split("\n")
+    .map(line => `<p>${line.trim()}</p>`)
+    .join("");
+}
+
 // --- Load Weekly Mystery ---
 async function loadWeeklyMystery(userId) {
   console.log("🔎 Loading weekly mystery...");
