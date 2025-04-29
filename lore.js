@@ -69,8 +69,19 @@ entryContent.innerHTML = formatText(entry.details);
 
 // Toggle visibility
 entryHeader.addEventListener("click", () => {
+  // Close all other entries within the same category
+  innerWrapper.querySelectorAll(".lore-entry").forEach(entry => {
+    if (entry !== entryWrapper) {
+      entry.classList.remove("open");
+      entry.querySelector(".lore-details").classList.add("hidden");
+    }
+  });
+
+  // Toggle current entry
+  entryWrapper.classList.toggle("open");
   entryContent.classList.toggle("hidden");
 });
+
 
 entryWrapper.appendChild(entryHeader);
 entryWrapper.appendChild(entryContent);
