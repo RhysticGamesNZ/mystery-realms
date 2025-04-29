@@ -1,15 +1,31 @@
 // statsTracker.js
-import { doc, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { doc, updateDoc, increment, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-/**
- * Increments correct guesses and streak
- */
 export async function trackCorrectGuess(db, uid) {
   const ref = doc(db, "users", uid);
   await updateDoc(ref, {
     correct: increment(1),
     streak: increment(1)
   });
+
+  // Fetch updated correct count
+  const snap = await getDoc(ref);
+  if (!snap.exists()) return;
+
+  const data = snap.data();
+  const correct = data.correct || 0;
+  const levelIndex = Math.floor(correct / 7);
+  const cappedIndex = Math.min(levelIndex, 19); // prevent overflow
+
+  // Fetch level title from Firestore
+  const levelRef = doc(db, "levelTitles", String(cappedIndex));
+  const levelSnap = await getDoc(levelRef);
+  if (!levelSnap.exists()) return;
+
+  const newLevel = levelSnap.data().name;
+  if (data.level !== newLevel) {
+    await updateDoc(ref, { level: newLevel });
+  }
 }
 
 /**
