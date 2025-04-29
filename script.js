@@ -14,6 +14,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+function formatText(text) {
+  return text.split("\n").map(line => `<p>${line.trim()}</p>`).join("");
+}
+
 function getQueryDateRange(dateStr) {
   const date = new Date(dateStr);
   date.setUTCHours(0, 0, 0, 0);
@@ -66,13 +70,13 @@ async function loadTodayMystery() {
 
 function renderMystery(data) {
   document.getElementById("mystery-title").textContent = data.title;
-  document.getElementById("mystery-premise").textContent = data.premise;
+  document.getElementById("mystery-premise").innerHTML = formatText(data.premise);
 
   const cluesList = document.getElementById("mystery-clues");
   cluesList.innerHTML = "";
   data.clues.forEach(clue => {
     const li = document.createElement("li");
-    li.textContent = clue;
+    li.innerHTML = formatText(clue);
     cluesList.appendChild(li);
   });
 
@@ -102,8 +106,8 @@ function renderMystery(data) {
     form.style.display = "none";
     resultDiv.innerHTML = `
       <p><strong>${saved.correct ? 'Correct!' : 'Incorrect.'}</strong></p>
-      <p><strong>Answer:</strong> ${data.answer}</p>
-      <p><em>${data.explanation}</em></p>
+      <p><strong>Answer:</strong> ${formatText(data.answer)}</p>
+      <p><em>${formatText(data.explanation)}</em></p>
       <p><em><strong>Archive Note:</strong> ${data.archive_note}</em></p>
     `;
   } else {
@@ -124,8 +128,8 @@ function renderMystery(data) {
       form.style.display = "none";
       resultDiv.innerHTML = `
         <p><strong>${isCorrect ? 'Correct!' : 'Incorrect.'}</strong></p>
-        <p><strong>Answer:</strong> ${data.answer}</p>
-        <p><em>${data.explanation}</em></p>
+        <p><strong>Answer:</strong> ${formatText(data.answer)}</p>
+        <p><em>${formatText(data.explanation)}</em></p>
         <p><em><strong>Archive Note:</strong> ${data.archive_note}</em></p>
       `;
     };
