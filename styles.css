@@ -11,10 +11,8 @@ html, body {
   min-height: 100vh;
   width: 100%;
   overflow-x: hidden;
-  font-family: 'Cormorant Garamond', serif;
+  font-family: 'IM Fell English', serif;
   font-size: 18px;
-  background: url('/parchment-texture.jpg') repeat;
-  background-size: cover;
   background-color: #F7F0E0;
   color: #66401A;
   line-height: 1.7;
