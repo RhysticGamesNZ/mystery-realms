@@ -114,20 +114,19 @@ async function loadWeeklyMystery(userId) {
 
   clues.forEach((clue) => {
     if (today >= clue.day && clue.text) {
-      const clueText = document.createElement('div');
-         clueText.className = "clue-text";
-         clueText.innerHTML = formatText(clue.text);
+      const clueBlock = document.createElement('div');
+        clueBlock.className = "clue-block";
 
       const h4 = document.createElement('h4');
-      h4.className = "clue-title";
-      h4.textContent = clue.title;
+        h4.className = "clue-title";
+        h4.textContent = clue.title;
 
-      const p = document.createElement('p');
-      p.className = "clue-text";
-      p.textContent = clue.text;
+      const clueText = document.createElement('div');
+        clueText.className = "clue-text";
+        clueText.innerHTML = formatText(clue.text);
 
       clueBlock.appendChild(h4);
-      clueBlock.appendChild(p);
+      clueBlock.appendChild(clueText);
       cluesList.appendChild(clueBlock);
     }
   });
