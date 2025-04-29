@@ -23,8 +23,13 @@ const loreContainer = document.getElementById("lore-container");
 
 // --- Utility ---
 function formatText(text) {
-  return text.split("\n").map(line => `<p>${line.trim()}</p>`).join("");
+  if (!text || typeof text !== 'string') return '';
+  return text
+    .split('\n')
+    .map(line => `<p>${line.trim()}</p>`)
+    .join('');
 }
+
 
 // --- Load Lore ---
 onAuthStateChanged(auth, async (user) => {
