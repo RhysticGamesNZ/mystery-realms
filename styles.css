@@ -135,6 +135,7 @@ fieldset {
   padding: 1rem;
 }
 
+/* Top-level category blocks (still using <details>) */
 #lore-container details {
   background: #f9f3df;
   border: 2px solid #b59a74;
@@ -150,7 +151,7 @@ fieldset {
   padding: 1rem;
   cursor: pointer;
   color: #5a3910;
-  list-style: none; /* Removes the default triangle */
+  list-style: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -179,7 +180,7 @@ fieldset {
   }
 }
 
-/* Optional: Fancy arrow on the right */
+/* Fancy arrow for summary */
 #lore-container summary::after {
   content: '▼';
   font-size: 1.2rem;
@@ -190,36 +191,62 @@ fieldset {
   transform: rotate(180deg);
 }
 
-/* Nested details (for sub-entries inside lore) */
-#lore-container details details {
-  margin-left: 1rem;
-  margin-top: 0.5rem;
-}
-
+/* ============================
+   Custom Lore Entry Styling
+   ============================ */
 .lore-entry {
   background-color: #f9f3df;
-  margin-bottom: 1rem;
-  transition: box-shadow 0.3s ease;
   border: 2px solid #e5d4b5;
   border-radius: 8px;
+  padding: 0.5rem 1rem;
+  transition: box-shadow 0.3s ease;
 }
 
-.lore-summary {
-  background: #e6dcc8;
-  padding: 0.75rem;
-  cursor: pointer;
+.lore-entry:hover {
+  box-shadow: 0 0 6px rgba(90, 57, 16, 0.2);
+}
+
+.lore-title {
   font-weight: bold;
-  border-radius: 6px;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  color: #4a2c08;
+  position: relative;
+}
+
+.lore-title::after {
+  content: '+';
+  float: right;
+  font-weight: normal;
+  transition: transform 0.3s ease;
+}
+
+.lore-entry.open .lore-title::after {
+  content: '−';
+}
+
+/* Hidden content block */
+.lore-details {
+  padding: 0.5rem 0 0 0;
+  color: #2f1e0e;
+  animation: fadeIn 0.25s ease-in;
 }
 
 .lore-details.hidden {
   display: none;
-  padding: 0.75rem;
 }
 
-.lore-entry.open .lore-details {
-  display: block;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
+
 
 .premium {
   background-color: #822E2B;
@@ -491,7 +518,7 @@ input[type="radio"] {
 footer {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-around;
   background: #822E2B;
   color: #f7f0e0;
   padding: 1rem;
