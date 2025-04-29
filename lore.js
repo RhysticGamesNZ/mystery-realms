@@ -14,6 +14,13 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+function formatText(text) {
+  return text
+    .split("\n")
+    .map(line => `<p>${line.trim()}</p>`)
+    .join("");
+}
+
 // Elements
 const container = document.getElementById("lore-container");
 
