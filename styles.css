@@ -93,8 +93,7 @@ p {
   padding: 2rem 1rem;
   flex-wrap: nowrap;
   max-width: 1400px;
-  margin: 0 auto;
-}
+  }
 
 .page-wrapper > main {
   flex: 0 1 1000px;
@@ -216,10 +215,7 @@ fieldset {
   margin: 2rem auto;
   padding: 1.5rem;
   background-color: rgba(247, 240, 224, 0.95);
-  border: 2px solid #66401A;
-  border-radius: 10px;
-  box-shadow: 0 0 30px rgba(0,0,0,0.1);
-}
+ }
 /* ========== PROFILE PAGE (STATS) ========== */
 #auth-container,
 #profile-container {
