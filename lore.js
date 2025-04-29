@@ -1,10 +1,9 @@
-// --- Imports ---
+// lore.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getFirestore, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, query, orderBy, doc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-import { trackLoreRead } from "./statsTracker.js"; // 🛡️ new import
+import { trackLoreRead } from "./statsTracker.js"; // ✅
 
-// --- Firebase Init ---
 const firebaseConfig = {
   apiKey: "AIzaSyDXY7DEhinmbYLQ7zBRgEUJoc_eRsp-aNU",
   authDomain: "mystery-realms.firebaseapp.com",
@@ -18,80 +17,99 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// --- DOM Reference ---
-const loreContainer = document.getElementById("lore-container");
+// Where lore will be inserted
+const container = document.getElementById("lore-container");
 
-// --- Utility ---
+// Helper to preserve paragraph breaks
 function formatText(text) {
-  if (!text || typeof text !== 'string') return '';
+  if (!text) return "";
   return text
     .split('\n')
-    .map(line => `<p>${line.trim()}</p>`)
+    .map(p => `<p>${p.trim()}</p>`)
     .join('');
 }
 
-
-// --- Load Lore ---
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    console.warn("🚫 User not signed in");
-    return;
-  }
-
+// Group lore entries by category
+async function loadLore() {
   try {
-    await loadLore(user.uid);
-  } catch (error) {
-    console.error("Error loading lore:", error);
-  }
-});
+    const q = query(collection(db, "lore"), orderBy("category"), orderBy("title"));
+    const snapshot = await getDocs(q);
 
-async function loadLore(userId) {
-  const loreRef = collection(db, "lore");
-  const loreQuery = query(loreRef, orderBy("category"), orderBy("title"));
-  const snapshot = await getDocs(loreQuery);
+    const loreByCategory = {};
 
-  if (snapshot.empty) {
-    loreContainer.innerHTML = "<p>No lore entries available yet.</p>";
-    return;
-  }
+    snapshot.forEach(docSnap => {
+      const data = docSnap.data();
+      const { category, title, summary, details } = data;
 
-  let currentCategory = "";
-
-  snapshot.forEach((docSnap) => {
-    const data = docSnap.data();
-    const id = docSnap.id;
-
-    if (data.category !== currentCategory) {
-      currentCategory = data.category;
-      const categoryHeader = document.createElement("h2");
-      categoryHeader.className = "lore-category";
-      categoryHeader.textContent = currentCategory;
-      loreContainer.appendChild(categoryHeader);
-    }
-
-    const loreEntry = document.createElement("details");
-    loreEntry.className = "lore-entry";
-
-    const summary = document.createElement("summary");
-    summary.className = "lore-summary";
-    summary.textContent = data.title;
-    loreEntry.appendChild(summary);
-
-    const details = document.createElement("div");
-    details.className = "lore-details";
-    details.innerHTML = formatText(data.text);
-    loreEntry.appendChild(details);
-
-    // Open / Close Event
-    summary.addEventListener("click", async () => {
-      if (!loreEntry.classList.contains("open")) {
-        loreEntry.classList.add("open");
-        await trackLoreRead(db, userId); // 📈 Count as "read"
-      } else {
-        loreEntry.classList.remove("open");
+      if (!loreByCategory[category]) {
+        loreByCategory[category] = [];
       }
+      loreByCategory[category].push({
+        id: docSnap.id,
+        title,
+        summary,
+        details
+      });
     });
 
-    loreContainer.appendChild(loreEntry);
-  });
+    // Now render grouped lore
+    for (const category in loreByCategory) {
+      const categoryDetails = document.createElement("details");
+      categoryDetails.classList.add("lore-category-wrapper");
+
+      const categorySummary = document.createElement("summary");
+      categorySummary.textContent = category;
+      categorySummary.classList.add("lore-category");
+
+      categoryDetails.appendChild(categorySummary);
+
+      loreByCategory[category].forEach(entry => {
+        const loreEntry = document.createElement("details");
+        loreEntry.className = "lore-entry";
+
+        const loreSummary = document.createElement("summary");
+        loreSummary.className = "lore-summary";
+        loreSummary.textContent = entry.title;
+
+        const loreDetails = document.createElement("div");
+        loreDetails.className = "lore-details";
+
+        // Insert formatted summary + details
+        loreDetails.innerHTML = `
+          <h4>Summary</h4>
+          ${formatText(entry.summary)}
+          <h4>Details</h4>
+          ${formatText(entry.details)}
+        `;
+
+        loreEntry.appendChild(loreSummary);
+        loreEntry.appendChild(loreDetails);
+
+        // Track read when user opens the entry
+        loreEntry.addEventListener("toggle", async () => {
+          if (loreEntry.open) {
+            const user = auth.currentUser;
+            if (user) {
+              await trackLoreRead(db, user.uid, entry.id);
+            }
+          }
+        });
+
+        categoryDetails.appendChild(loreEntry);
+      });
+
+      container.appendChild(categoryDetails);
+    }
+  } catch (error) {
+    console.error("❌ Error loading lore:", error);
+    container.innerHTML = `<p>Failed to load lore archive. Please try again later.</p>`;
+  }
 }
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    loadLore();
+  } else {
+    loadLore(); // Public users should still see lore
+  }
+});
