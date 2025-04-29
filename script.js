@@ -50,7 +50,7 @@ async function loadMystery(user) {
   today.setUTCHours(0, 0, 0, 0);
   const todayTimestamp = today.getTime();
 
-  const mysteriesRef = collection(db, "dailyMysteries");
+  const mysteriesRef = collection(db, "mysteries");
   const q = query(mysteriesRef, where("date", "==", todayTimestamp));
 
   const snapshot = await getDocs(q);
