@@ -200,15 +200,20 @@ fieldset {
    ============================ */
 
 .lore-entry {
-  background-color: #f9f3df;
-  border: 2px solid #e5d4b5;
+  display: block;
+  background-color: #f3e9d2;
+  color: #5a3910;
+  font-family: 'IM Fell English', serif;
+  font-size: 1.05rem;
+  padding: 1rem 1.5rem;
+  border: 2px solid #b59a74;
   border-radius: 8px;
-  padding: 0.5rem 1rem;
-  transition: box-shadow 0.3s ease;
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
 }
 
 .lore-entry:hover {
-  box-shadow: 0 0 6px rgba(90, 57, 16, 0.2);
+  box-shadow: 0 0 12px rgba(221, 191, 130, 0.8);
+  transform: translateY(-2px);
 }
 
 .lore-title {
