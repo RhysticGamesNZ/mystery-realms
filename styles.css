@@ -224,7 +224,7 @@ fieldset {
   position: relative;
 }
 
-.lore-title::before {
+.lore-title::after {
   content: '+';
   float: right;
   font-weight: normal;
@@ -233,6 +233,7 @@ fieldset {
 
 .lore-entry.open .lore-title::after {
   content: '−';
+  float: right;
 }
 
 /* Hidden content block */
