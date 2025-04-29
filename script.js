@@ -1,5 +1,11 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import { getFirestore, collection, query, where, getDocs, getDoc, doc, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import {
+  trackCorrectGuess,
+  trackIncorrectGuess,
+  trackMysterySolved,
+  validateStreak
+} from "./statsTracker.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDXY7DEhinmbYLQ7zBRgEUJoc_eRsp-aNU",
@@ -26,7 +32,7 @@ function getQueryDateRange(dateStr) {
   return [Timestamp.fromDate(date), Timestamp.fromDate(nextDay)];
 }
 
-async function loadTodayMystery() {
+async function loadTodayMystery(user) {
   let q;
   const urlParams = new URLSearchParams(window.location.search);
   const docId = urlParams.get("id");
@@ -111,7 +117,7 @@ function renderMystery(data) {
       <p><em><strong>Archive Note:</strong> ${data.archive_note}</em></p>
     `;
   } else {
-    form.onsubmit = (e) => {
+    form.onsubmit = async (e) => {
       e.preventDefault();
       const selected = document.querySelector("input[name='mystery-choice']:checked");
       if (!selected) return;
@@ -122,6 +128,15 @@ function renderMystery(data) {
         selected: selected.value,
         correct: isCorrect
       }));
+
+      
+      if (isCorrect) {
+      await validateStreak(db, user.uid);
+      await trackCorrectGuess(db, user.uid);
+      await trackMysterySolved(db, user.uid);
+      } else {
+      await trackIncorrectGuess(db, user.uid);
+      }
 
       // Hide form & show result
       choicesFieldset.style.display = "none";
@@ -136,4 +151,10 @@ function renderMystery(data) {
   }
 }
 
-loadTodayMystery();
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    loadTodayMystery(user);
+  } else {
+    console.warn("🔒 User not authenticated.");
+  }
+});
