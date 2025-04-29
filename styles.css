@@ -128,14 +128,18 @@ fieldset {
 }
 
 /* Lore Page Specific */
+
 #lore-container {
-  width: 100%;
+  flex: 1 1 100%;
   max-width: 1000px;
+  width: 100%;
   margin: 2rem auto;
   padding: 1rem;
-}
+  background-color: rgba(247, 240, 224, 0.95);
+ }
 
 /* Top-level category blocks (still using <details>) */
+
 #lore-container details {
   background: #f9f3df;
   border: 2px solid #b59a74;
@@ -147,7 +151,7 @@ fieldset {
 
 #lore-container summary {
   font-weight: bold;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   padding: 1rem;
   cursor: pointer;
   color: #5a3910;
@@ -194,6 +198,7 @@ fieldset {
 /* ============================
    Custom Lore Entry Styling
    ============================ */
+
 .lore-entry {
   background-color: #f9f3df;
   border: 2px solid #e5d4b5;
@@ -214,7 +219,7 @@ fieldset {
   position: relative;
 }
 
-.lore-title::after {
+.lore-title::before {
   content: '+';
   float: right;
   font-weight: normal;
@@ -247,7 +252,6 @@ fieldset {
   }
 }
 
-
 .premium {
   background-color: #822E2B;
   color: #F7F0E0;
@@ -256,6 +260,7 @@ fieldset {
   margin-bottom: 2rem;
   text-align: center;
 }
+
 .premium button {
   margin-top: 1rem;
   background-color: #F7F0E0;
@@ -267,15 +272,8 @@ fieldset {
   font-weight: bold;
 }
 
-#lore-container {
-  flex: 1 1 100%;
-  max-width: 1000px;
-  width: 100%;
-  margin: 2rem auto;
-  padding: 1rem;
-  background-color: rgba(247, 240, 224, 0.95);
- }
 /* ========== PROFILE PAGE (STATS) ========== */
+
 #profile-container {
   max-width: 600px;
   margin: 2rem auto;
