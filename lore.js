@@ -1,73 +1,106 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDXY7DEhinmbYLQ7zBRgEUJoc_eRsp-aNU",
-    authDomain: "mystery-realms.firebaseapp.com",
-    projectId: "mystery-realms",
-    storageBucket: "mystery-realms.firebasestorage.app",
-    messagingSenderId: "511471364499",
-    appId: "1:511471364499:web:fbc7d813e9b8d28cf32066",
-    measurementId: "G-ELW3HVV36V"
-  };
+// Initialize Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyDXY7DEhinmbYLQ7zBRgEUJoc_eRsp-aNU",
+  authDomain: "mystery-realms.firebaseapp.com",
+  projectId: "mystery-realms",
+  storageBucket: "mystery-realms.appspot.com",
+  messagingSenderId: "511471364499",
+  appId: "1:511471364499:web:fbc7d813e9b8d28cf32066"
+};
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-function formatText(text) {
-  return text
-    .split("\n")
-    .map(line => `<p>${line.trim()}</p>`)
-    .join("");
-}
+// Elements
+const container = document.getElementById("lore-container");
 
+// Fetch and Render Lore
 async function loadLore() {
-  const querySnapshot = await getDocs(collection(db, "lore"));
-  const container = document.getElementById("lore-container");
+  try {
+    const loreRef = collection(db, "lore");
+    const loreQuery = query(loreRef, orderBy("category"), orderBy("title"));
+    const snapshot = await getDocs(loreQuery);
 
-  const categorized = {};
+    if (snapshot.empty) {
+      container.innerHTML = "<p>No lore found.</p>";
+      return;
+    }
 
-  // Group by category
-  querySnapshot.forEach(doc => {
-    const data = doc.data();
-    if (!categorized[data.category]) categorized[data.category] = [];
-    categorized[data.category].push(data);
-  });
+    const loreByCategory = {};
 
-  // Render categories
-  for (const category in categorized) {
-    const categoryDetails = document.createElement("details");
-    const categorySummary = document.createElement("summary");
-    categorySummary.textContent = category;
-    categoryDetails.appendChild(categorySummary);
-
-    categorized[category].forEach(entry => {
-      const entryDetails = document.createElement("details");
-      const entrySummary = document.createElement("summary");
-      entrySummary.textContent = entry.title;
-
-      const content = document.createElement("p");
-      content.innerHTML = formatText(entry.details);
-
-      entryDetails.appendChild(entrySummary);
-      entryDetails.appendChild(content);
-      categoryDetails.appendChild(entryDetails);
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      if (!loreByCategory[data.category]) {
+        loreByCategory[data.category] = [];
+      }
+      loreByCategory[data.category].push({
+        title: data.title,
+        content: data.content
+      });
     });
 
-    container.appendChild(categoryDetails);
+    renderLore(loreByCategory);
+  } catch (err) {
+    console.error("Error loading lore:", err);
+    container.innerHTML = "<p>Failed to load lore entries. Please try again later.</p>";
   }
 }
 
-// HAMBURGER MENU HANDLER
-document.addEventListener("DOMContentLoaded", function () {
-  const hamburgerIcon = document.getElementById("hamburger-icon");
-  const navLinks = document.querySelector(".nav-links");
-  const logo = document.querySelector(".logo");
+// Render Lore by Category
+function renderLore(loreData) {
+  for (const category in loreData) {
+    const details = document.createElement("details");
+    const summary = document.createElement("summary");
+    summary.textContent = category;
+    details.appendChild(summary);
 
-  hamburgerIcon.addEventListener("click", function () {
-    navLinks.classList.toggle("active");
-    logo.style.display = navLinks.classList.contains("active") ? "none" : "block";
+    const contentWrapper = document.createElement("div");
+    contentWrapper.className = "content-wrapper";
+
+    loreData[category].forEach(entry => {
+      const loreEntry = document.createElement("div");
+      loreEntry.className = "lore-entry";
+
+      const loreSummary = document.createElement("div");
+      loreSummary.className = "lore-summary";
+      loreSummary.textContent = entry.title;
+
+      const loreDetails = document.createElement("div");
+      loreDetails.className = "lore-details";
+      loreDetails.textContent = entry.content;
+
+      loreEntry.appendChild(loreSummary);
+      loreEntry.appendChild(loreDetails);
+      contentWrapper.appendChild(loreEntry);
+    });
+
+    details.appendChild(contentWrapper);
+    container.appendChild(details);
+  }
+
+  // Attach expand/collapse behavior to lore summaries
+  setupLoreExpand();
+}
+
+// Setup expand/collapse for each lore summary
+function setupLoreExpand() {
+  const summaries = document.querySelectorAll(".lore-summary");
+
+  summaries.forEach(summary => {
+    summary.addEventListener("click", () => {
+      const entry = summary.parentElement;
+      entry.classList.toggle("open");
+
+      // Close others if you want accordion-like behavior
+      // document.querySelectorAll('.lore-entry').forEach(other => {
+      //   if (other !== entry) other.classList.remove('open');
+      // });
+    });
   });
-});
+}
 
+// Initialize
 loadLore();
