@@ -77,7 +77,7 @@ function renderLore(loreData) {
 
       const loreDetails = document.createElement("div");
       loreDetails.className = "lore-details";
-      loreDetails.textContent = entry.details;
+      loreDetails.textContent = formatText(entry.details);
 
       loreEntry.appendChild(loreSummary);
       loreEntry.appendChild(loreDetails);
