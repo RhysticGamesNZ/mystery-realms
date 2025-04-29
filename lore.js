@@ -1,7 +1,10 @@
+// --- Imports ---
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { getFirestore, collection, query, orderBy, getDocs } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import { trackLoreRead } from "./statsTracker.js"; // 🛡️ new import
 
-// Initialize Firebase
+// --- Firebase Init ---
 const firebaseConfig = {
   apiKey: "AIzaSyDXY7DEhinmbYLQ7zBRgEUJoc_eRsp-aNU",
   authDomain: "mystery-realms.firebaseapp.com",
@@ -13,98 +16,77 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
-// Elements
-const container = document.getElementById("lore-container");
+// --- DOM Reference ---
+const loreContainer = document.getElementById("lore-container");
 
-// Fetch and Render Lore
-async function loadLore() {
+// --- Utility ---
+function formatText(text) {
+  return text.split("\n").map(line => `<p>${line.trim()}</p>`).join("");
+}
+
+// --- Load Lore ---
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    console.warn("🚫 User not signed in");
+    return;
+  }
+
   try {
-    const loreRef = collection(db, "lore");
-    const loreQuery = query(loreRef, orderBy("category"), orderBy("title"));
-    const snapshot = await getDocs(loreQuery);
+    await loadLore(user.uid);
+  } catch (error) {
+    console.error("Error loading lore:", error);
+  }
+});
 
-    if (snapshot.empty) {
-      container.innerHTML = "<p>No lore found.</p>";
-      return;
+async function loadLore(userId) {
+  const loreRef = collection(db, "lore");
+  const loreQuery = query(loreRef, orderBy("category"), orderBy("title"));
+  const snapshot = await getDocs(loreQuery);
+
+  if (snapshot.empty) {
+    loreContainer.innerHTML = "<p>No lore entries available yet.</p>";
+    return;
+  }
+
+  let currentCategory = "";
+
+  snapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+    const id = docSnap.id;
+
+    if (data.category !== currentCategory) {
+      currentCategory = data.category;
+      const categoryHeader = document.createElement("h2");
+      categoryHeader.className = "lore-category";
+      categoryHeader.textContent = currentCategory;
+      loreContainer.appendChild(categoryHeader);
     }
 
-    const loreByCategory = {};
+    const loreEntry = document.createElement("details");
+    loreEntry.className = "lore-entry";
 
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      if (!loreByCategory[data.category]) {
-        loreByCategory[data.category] = [];
-      }
-      loreByCategory[data.category].push({
-        title: data.title,
-        details: data.details
-      });
-    });
-
-    renderLore(loreByCategory);
-  } catch (err) {
-    console.error("Error loading lore:", err);
-    container.innerHTML = "<p>Failed to load lore entries. Please try again later.</p>";
-  }
-}
-
-// Render Lore by Category
-function renderLore(loreData) {
-  for (const category in loreData) {
-    const details = document.createElement("details");
     const summary = document.createElement("summary");
-    summary.textContent = category;
-    details.appendChild(summary);
+    summary.className = "lore-summary";
+    summary.textContent = data.title;
+    loreEntry.appendChild(summary);
 
-    const contentWrapper = document.createElement("div");
-    contentWrapper.className = "content-wrapper";
+    const details = document.createElement("div");
+    details.className = "lore-details";
+    details.innerHTML = formatText(data.text);
+    loreEntry.appendChild(details);
 
-    loreData[category].forEach(entry => {
-      const loreEntry = document.createElement("div");
-      loreEntry.className = "lore-entry";
-
-      const loreSummary = document.createElement("div");
-      loreSummary.className = "lore-summary";
-      loreSummary.textContent = entry.title;
-
-      const loreDetails = document.createElement("div");
-      loreDetails.className = "lore-details";
-      
-      loreDetails.innerHTML = entry.details
-          .split('\n\n') // split into paragraphs (2 newlines)
-          .map(paragraph => `<p>${paragraph.trim()}</p>`)
-          .join('');
-      
-      loreEntry.appendChild(loreSummary);
-      loreEntry.appendChild(loreDetails);
-      contentWrapper.appendChild(loreEntry);
+    // Open / Close Event
+    summary.addEventListener("click", async () => {
+      if (!loreEntry.classList.contains("open")) {
+        loreEntry.classList.add("open");
+        await trackLoreRead(db, userId); // 📈 Count as "read"
+      } else {
+        loreEntry.classList.remove("open");
+      }
     });
 
-    details.appendChild(contentWrapper);
-    container.appendChild(details);
-  }
-
-  // Attach expand/collapse behavior to lore summaries
-  setupLoreExpand();
-}
-
-// Setup expand/collapse for each lore summary
-function setupLoreExpand() {
-  const summaries = document.querySelectorAll(".lore-summary");
-
-  summaries.forEach(summary => {
-    summary.addEventListener("click", () => {
-      const entry = summary.parentElement;
-      entry.classList.toggle("open");
-
-      // Close others if you want accordion-like behavior
-   document.querySelectorAll('.lore-entry').forEach(other => {
-      if (other !== entry) other.classList.remove('open');
-      });
-    });
+    loreContainer.appendChild(loreEntry);
   });
 }
-
-// Initialize
-loadLore();
