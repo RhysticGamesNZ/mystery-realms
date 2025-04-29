@@ -86,13 +86,15 @@ p {
 
 /* ========== MAIN LAYOUT ========== */
 .page-wrapper {
+  flex: 1;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   gap: 2rem;
-  padding: 2rem 1rem;
+  padding: 1rem;
   flex-wrap: nowrap;
-  max-width: 1400px;
+  max-width: 100%;
   }
 
 .page-wrapper > main {
@@ -213,7 +215,7 @@ fieldset {
   max-width: 1000px;
   width: 100%;
   margin: 2rem auto;
-  padding: 1.5rem;
+  padding: 1rem;
   background-color: rgba(247, 240, 224, 0.95);
  }
 /* ========== PROFILE PAGE (STATS) ========== */
