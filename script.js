@@ -1,164 +1,110 @@
+// --- Imports ---
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs, getDoc, doc, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { getFirestore, collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import { trackCorrectGuess, trackIncorrectGuess, trackMysterySolved } from "./statsTracker.js";
 
-window.addEventListener("DOMContentLoaded", () => {
-  const modal = document.getElementById("welcome-modal");
-  const closeBtn = document.getElementById("close-welcome");
-  const siteContent = document.getElementById("site-content");
-
-  const welcomeSeen = localStorage.getItem("mystery-welcome-seen");
-
-  if (welcomeSeen === "true") {
-    modal.classList.remove("show");
-    siteContent.classList.remove("dimmed");
-  } else {
-    modal.classList.add("show");
-    siteContent.classList.add("dimmed");
-  }
-
-  closeBtn.addEventListener("click", () => {
-    modal.classList.remove("show");
-    siteContent.classList.remove("dimmed");
-    localStorage.setItem("mystery-welcome-seen", "true");
-  });
-});
-
+// --- Firebase Init ---
 const firebaseConfig = {
   apiKey: "AIzaSyDXY7DEhinmbYLQ7zBRgEUJoc_eRsp-aNU",
   authDomain: "mystery-realms.firebaseapp.com",
   projectId: "mystery-realms",
-  storageBucket: "mystery-realms.firebasestorage.app",
+  storageBucket: "mystery-realms.appspot.com",
   messagingSenderId: "511471364499",
-  appId: "1:511471364499:web:fbc7d813e9b8d28cf32066",
-  measurementId: "G-ELW3HVV36V"
+  appId: "1:511471364499:web:fbc7d813e9b8d28cf32066"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
+// --- DOM References ---
+const title = document.getElementById("mystery-title");
+const premise = document.getElementById("mystery-premise");
+const cluesList = document.getElementById("mystery-clues");
+const form = document.getElementById("mystery-form");
+const fieldset = document.getElementById("mystery-choices");
+const result = document.getElementById("mystery-result");
+
+// --- Utility ---
 function formatText(text) {
-  return text
-    .split("\n")
-    .map(line => `<p>${line.trim()}</p>`)
-    .join("");
+  return text.split("\n").map(line => `<p>${line.trim()}</p>`).join("");
 }
 
-function getQueryDateRange(dateStr) {
-  const date = new Date(dateStr);
-  date.setUTCHours(0, 0, 0, 0);
-  const nextDay = new Date(date);
-  nextDay.setUTCDate(date.getUTCDate() + 1);
-  return [Timestamp.fromDate(date), Timestamp.fromDate(nextDay)];
-}
-
-async function loadTodayMystery() {
-  let q;
-  const urlParams = new URLSearchParams(window.location.search);
-  const docId = urlParams.get("id");
-  
-  console.log("📦 Attempting to fetch document with ID:", docId);
-
-  if (docId) {
-    // Fetch mystery by docId if it's present in the URL
-    const docRef = doc(db, "mysteries", docId);
-    const docSnap = await getDoc(docRef);
-
-    if (!docSnap.exists()) {
-      console.warn("⚠️ Document not found:", docId);
-      document.getElementById("mystery-title").textContent = "Mystery not found.";
-      return;
-    }
-
-    console.log("✅ Document fetched:", docId);
-    renderMystery(docSnap.data());
-  } else {
-    // Load today's mystery if no docId is provided
-    const today = new Date();
-    today.setUTCHours(0, 0, 0, 0);
-    const tomorrow = new Date(today);
-    tomorrow.setUTCDate(today.getUTCDate() + 1);
-    const start = Timestamp.fromDate(today);
-    const end = Timestamp.fromDate(tomorrow);
-
-    q = query(
-      collection(db, "mysteries"),
-      where("date", ">=", start),
-      where("date", "<", end)
-    );
-
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((doc) => {
-      renderMystery(doc.data());
-    });
+// --- Main Load ---
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    console.warn("🚫 User not logged in");
+    return;
   }
-}
 
-function renderMystery(data) {
-  document.getElementById("mystery-title").textContent = data.title;
-  document.getElementById("mystery-premise").innerHTML = formatText(data.premise);
+  try {
+    await loadMystery(user);
+  } catch (error) {
+    console.error("Error loading mystery:", error);
+  }
+});
 
-  const cluesList = document.getElementById("mystery-clues");
+async function loadMystery(user) {
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  const todayTimestamp = today.getTime();
+
+  const mysteriesRef = collection(db, "dailyMysteries");
+  const q = query(mysteriesRef, where("date", "==", todayTimestamp));
+
+  const snapshot = await getDocs(q);
+  if (snapshot.empty) {
+    title.textContent = "No Mystery Available";
+    premise.innerHTML = "<p>Please return tomorrow for a new enigma.</p>";
+    return;
+  }
+
+  const mysteryDoc = snapshot.docs[0];
+  const data = mysteryDoc.data();
+
+  title.textContent = data.title;
+  premise.innerHTML = formatText(data.premise);
   cluesList.innerHTML = "";
-  data.clues.forEach(clue => {
+
+  // Load clues
+  data.clues.forEach((clueText) => {
     const li = document.createElement("li");
-    li.textContent = clue;
+    li.className = "clue-reveal";
+    li.innerHTML = formatText(clueText);
     cluesList.appendChild(li);
   });
 
-  const choicesFieldset = document.getElementById("mystery-choices");
-  const form = document.getElementById("mystery-form");
-  const resultDiv = document.getElementById("mystery-result");
-
-  choicesFieldset.innerHTML = "";
+  // Load choices
+  fieldset.innerHTML = "";
   data.choices.forEach((choice, index) => {
     const label = document.createElement("label");
     const input = document.createElement("input");
     input.type = "radio";
     input.name = "mystery-choice";
-    input.value = choice;
-    if (index === 0) input.checked = true;
+    input.value = index;
     label.appendChild(input);
     label.appendChild(document.createTextNode(choice));
-    choicesFieldset.appendChild(label);
+    fieldset.appendChild(label);
   });
 
-  const formKey = `mystery-submitted-${data.title.replace(/\s+/g, "-").toLowerCase()}`;
-  const saved = JSON.parse(localStorage.getItem(formKey));
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const selected = document.querySelector('input[name="mystery-choice"]:checked');
+    if (!selected) return;
 
-  if (saved) {
-    // Already answered — auto-render result
-    choicesFieldset.style.display = "none";
+    const selectedIndex = parseInt(selected.value);
+    const correctIndex = data.correctAnswerIndex;
+
+    if (selectedIndex === correctIndex) {
+      result.innerHTML = "<p><strong>✅ Correct! Well done, Seeker.</strong></p>";
+      await trackCorrectGuess(db, user.uid);
+      await trackMysterySolved(db, user.uid);
+    } else {
+      result.innerHTML = `<p><strong>❌ Incorrect. The truth eludes you... It was: ${data.choices[correctIndex]}</strong></p>`;
+      await trackIncorrectGuess(db, user.uid);
+    }
+
     form.style.display = "none";
-    resultDiv.innerHTML = `
-      <p><strong>${saved.correct ? 'Correct!' : 'Incorrect.'}</strong></p>
-      <p><strong>Answer:</strong> ${data.answer}</p>
-      <p><em>${data.explanation}</em></p>
-      <p><em><strong>Archive Note:</strong> ${data.archive_note}</em></p>
-    `;
-  } else {
-    form.onsubmit = (e) => {
-      e.preventDefault();
-      const selected = document.querySelector("input[name='mystery-choice']:checked");
-      if (!selected) return;
-
-      const isCorrect = selected.value === data.answer;
-
-      localStorage.setItem(formKey, JSON.stringify({
-        selected: selected.value,
-        correct: isCorrect
-      }));
-
-      // Hide form & show result
-      choicesFieldset.style.display = "none";
-      form.style.display = "none";
-      resultDiv.innerHTML = `
-        <p><strong>${isCorrect ? 'Correct!' : 'Incorrect.'}</strong></p>
-        <p><strong>Answer:</strong> ${formatText(data.answer)}</p>
-        <p><em>${data.explanation}</em></p>
-        <p><em><strong>Archive Note:</strong> ${formatText(data.archive_note)}</em></p>
-      `;
-    };
-  }
+  });
 }
-
-loadTodayMystery();
