@@ -98,7 +98,7 @@ async function loadWeeklyMystery(userId) {
   console.log("✅ Loaded mystery:", docId, data);
 
   title.textContent = data.title;
-  premise.textContent = data.premise;
+  premise.innerHTML = formatText(data.premise);
   cluesList.innerHTML = "";
 
   const today = (new Date()).getUTCDay();
@@ -114,8 +114,9 @@ async function loadWeeklyMystery(userId) {
 
   clues.forEach((clue) => {
     if (today >= clue.day && clue.text) {
-      const clueBlock = document.createElement('div');
-      clueBlock.className = "clue-block";
+      const clueText = document.createElement('div');
+         clueText.className = "clue-text";
+         clueText.innerHTML = formatText(clue.text);
 
       const h4 = document.createElement('h4');
       h4.className = "clue-title";
