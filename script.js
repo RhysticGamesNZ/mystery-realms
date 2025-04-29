@@ -98,6 +98,7 @@ async function loadMystery(user) {
 
     if (selectedIndex === correctIndex) {
       result.innerHTML = "<p><strong>✅ Correct! Well done, Seeker.</strong></p>";
+      await validateStreak(db, user.uid); // check for skipped day
       await trackCorrectGuess(db, user.uid);
       await trackMysterySolved(db, user.uid);
     } else {
