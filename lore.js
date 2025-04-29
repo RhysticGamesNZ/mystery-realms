@@ -39,7 +39,7 @@ async function loadLore() {
 
     snapshot.forEach(docSnap => {
       const data = docSnap.data();
-      const { category, title, summary, details } = data;
+      const { category, title, details } = data;
 
       if (!loreByCategory[category]) {
         loreByCategory[category] = [];
@@ -47,7 +47,6 @@ async function loadLore() {
       loreByCategory[category].push({
         id: docSnap.id,
         title,
-        summary,
         details
       });
     });
@@ -76,8 +75,6 @@ async function loadLore() {
 
         // Insert formatted summary + details
         loreDetails.innerHTML = `
-          <h4>Summary</h4>
-          ${formatText(entry.summary)}
           <h4>Details</h4>
           ${formatText(entry.details)}
         `;
