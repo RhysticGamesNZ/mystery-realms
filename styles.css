@@ -198,6 +198,31 @@ fieldset {
   margin-top: 0.5rem;
 }
 
+.lore-entry {
+  background-color: #f9f3df;
+  margin-bottom: 1rem;
+  transition: box-shadow 0.3s ease;
+  border: 2px solid #e5d4b5;
+  border-radius: 8px;
+}
+
+.lore-summary {
+  background: #e6dcc8;
+  padding: 0.75rem;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 6px;
+}
+
+.lore-details {
+  display: none;
+  padding: 0.75rem;
+}
+
+.lore-entry.open .lore-details {
+  display: block;
+}
+
 .premium {
   background-color: #822E2B;
   color: #F7F0E0;
