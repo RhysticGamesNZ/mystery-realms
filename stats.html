@@ -156,6 +156,25 @@
       }
     };
 
+  document.getElementById("forgot-password-link").addEventListener("click", async (e) => {
+  e.preventDefault();
+  const email = emailInput.value;
+
+  if (!email) {
+    errorDisplay.textContent = "Enter your email first, then click 'Forgot Password'.";
+    return;
+  }
+
+  try {
+    await auth.sendPasswordResetEmail(email);
+    errorDisplay.style.color = "green";
+    errorDisplay.textContent = "📧 Password reset email sent!";
+  } catch (err) {
+    errorDisplay.style.color = "darkred";
+    errorDisplay.textContent = "Error: " + err.message;
+  }
+});
+
     document.getElementById("logout-btn").addEventListener("click", async () => {
       await signOut(auth);
       location.reload();
