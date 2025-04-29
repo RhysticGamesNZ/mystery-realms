@@ -38,7 +38,7 @@ async function loadLore() {
       }
       loreByCategory[data.category].push({
         title: data.title,
-        content: data.content
+        details: data.details
       });
     });
 
@@ -70,7 +70,7 @@ function renderLore(loreData) {
 
       const loreDetails = document.createElement("div");
       loreDetails.className = "lore-details";
-      loreDetails.textContent = entry.content;
+      loreDetails.textContent = entry.details;
 
       loreEntry.appendChild(loreSummary);
       loreEntry.appendChild(loreDetails);
@@ -95,9 +95,9 @@ function setupLoreExpand() {
       entry.classList.toggle("open");
 
       // Close others if you want accordion-like behavior
-      // document.querySelectorAll('.lore-entry').forEach(other => {
-      //   if (other !== entry) other.classList.remove('open');
-      // });
+   document.querySelectorAll('.lore-entry').forEach(other => {
+      if (other !== entry) other.classList.remove('open');
+      });
     });
   });
 }
