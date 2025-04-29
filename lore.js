@@ -57,9 +57,17 @@ async function loadLore() {
     container.appendChild(categoryDetails);
   }
 }
-document.getElementById("hamburger-icon").addEventListener("click", function() {
+
+// HAMBURGER MENU HANDLER
+document.addEventListener("DOMContentLoaded", function () {
+  const hamburgerIcon = document.getElementById("hamburger-icon");
   const navLinks = document.querySelector(".nav-links");
-  navLinks.classList.toggle("active"); // Toggle visibility of navigation links
+  const logo = document.querySelector(".logo");
+
+  hamburgerIcon.addEventListener("click", function () {
+    navLinks.classList.toggle("active");
+    logo.style.display = navLinks.classList.contains("active") ? "none" : "block";
+  });
 });
 
 loadLore();
