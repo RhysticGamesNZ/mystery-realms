@@ -112,24 +112,24 @@ async function loadWeeklyMystery(userId) {
     { day: 5, title: data.day5title, text: data.day5clue }
   ];
 
-  clues.forEach((clue) => {
-    if (today >= clue.day && clue.text) {
-      const clueBlock = document.createElement('div');
-        clueBlock.className = "clue-block";
+clues.forEach((clue) => {
+  if (today >= clue.day && clue.text) {
+    const clueBlock = document.createElement('div');
+    clueBlock.className = "clue-block";
 
-      const h4 = document.createElement('h4');
-        h4.className = "clue-title";
-        h4.textContent = clue.title;
+    const h4 = document.createElement('h4');
+    h4.className = "clue-title";
+    h4.textContent = clue.title;
 
-      const clueText = document.createElement('div');
-        clueText.className = "clue-text";
-        clueText.innerHTML = formatText(clue.text);
+    const clueText = document.createElement('div');
+    clueText.className = "clue-text";
+    clueText.innerHTML = formatText(clue.text);
 
-      clueBlock.appendChild(h4);
-      clueBlock.appendChild(clueText);
-      cluesList.appendChild(clueBlock);
-    }
-  });
+    clueBlock.appendChild(h4);
+    clueBlock.appendChild(clueText);
+    cluesList.appendChild(clueBlock);
+  }
+});
 
   // --- Voting ---
   if (today === 6) { // Saturday
