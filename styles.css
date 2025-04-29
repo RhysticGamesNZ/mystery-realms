@@ -212,7 +212,7 @@ fieldset {
   border-radius: 6px;
 }
 
-.lore-details {
+.lore-details.hidden {
   display: none;
   padding: 0.75rem;
 }
