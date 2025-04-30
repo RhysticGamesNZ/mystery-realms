@@ -170,6 +170,7 @@ function renderMystery(data, user) {
       <p><em>${formatText(data.explanation)}</em></p>
       <p><em><strong>Archive Note:</strong> ${data.archive_note}</em></p>
     `;
+      showCountdownToMidnightUTC();
   } else {
     form.onsubmit = async (e) => {
       e.preventDefault();
@@ -203,10 +204,10 @@ function renderMystery(data, user) {
         <p><em><strong>Archive Note:</strong> ${data.archive_note}</em></p>
         </div>
               `;
-        showCountdownToMidnightUTC();
       if (!user) {
           resultDiv.innerHTML += `<p><em><a href="stats.html">Log in to start tracking your streak →</a></em></p>`;
       }
+        showCountdownToMidnightUTC();
     };
   }
 }
