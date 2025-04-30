@@ -686,3 +686,44 @@ summary:hover {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+// Countdown timer //
+
+#next-mystery-timer {
+  background-color: #f9f3df;
+  border: 2px dashed #8c6b3f;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-top: 2rem;
+  text-align: center;
+  font-family: 'IM Fell English', serif;
+  box-shadow: 0 0 15px rgba(109, 77, 41, 0.5);
+  animation: fadeInGlow 0.8s ease-in-out;
+}
+
+#next-mystery-timer p {
+  color: #4b2e14;
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
+}
+
+#countdown {
+  font-weight: bold;
+  color: #e0851f;
+  font-size: 1.4rem;
+  text-shadow: 0 0 5px #e0b36a, 0 0 10px #e0b36a;
+}
+
+/* Subtle glowing animation */
+@keyframes fadeInGlow {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+    box-shadow: none;
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: 0 0 15px rgba(109, 77, 41, 0.5);
+  }
+}
