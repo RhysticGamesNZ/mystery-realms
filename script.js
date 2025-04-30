@@ -79,6 +79,28 @@ async function loadTodayMystery(user) {
   }
 }
 
+function showCountdownToMidnightUTC() {
+  const timerContainer = document.getElementById("next-mystery-timer");
+  const countdownSpan = document.getElementById("countdown");
+  timerContainer.style.display = "block";
+
+  function updateCountdown() {
+    const now = new Date();
+    const utcNow = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+    const nextMidnight = new Date(Date.UTC(utcNow.getUTCFullYear(), utcNow.getUTCMonth(), utcNow.getUTCDate() + 1));
+
+    const diffMs = nextMidnight - utcNow;
+    const hours = Math.floor(diffMs / (1000 * 60 * 60));
+    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+    countdownSpan.textContent = `${hours}h ${minutes}m ${seconds}s`;
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+}
+
 function renderMystery(data) {
   document.getElementById("mystery-title").textContent = data.title;
   document.getElementById("mystery-premise").innerHTML = formatText(data.premise);
@@ -155,6 +177,7 @@ function renderMystery(data) {
       if (!user) {
           resultDiv.innerHTML += `<p><em><a href="stats.html">Log in to start tracking your streak →</a></em></p>`;
       }
+      showCountdownToMidnightUTC();
     };
   }
 }
