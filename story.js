@@ -1,5 +1,18 @@
-import
+import { getFirestore, collection, getDocs, query, orderBy, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyDXY7DEhinmbYLQ7zBRgEUJoc_eRsp-aNU",
+  authDomain: "mystery-realms.firebaseapp.com",
+  projectId: "mystery-realms",
+  storageBucket: "mystery-realms.firebasestorage.app",
+  messagingSenderId: "511471364499",
+  appId: "1:511471364499:web:fbc7d813e9b8d28cf32066"
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore();
 const container = document.getElementById("chapter-container");
 
 async function loadPremiumStory() {
