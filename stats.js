@@ -57,7 +57,8 @@ form.onsubmit = async (e) => {
         streak: 0,
         correct: 0,
         incorrect: 0,
-        loreRead: 0
+        loreRead: 0,
+        lastSolved: Date;
       });
     } catch (createErr) {
       errorDisplay.textContent = createErr.message;
