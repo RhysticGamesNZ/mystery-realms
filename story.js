@@ -1,5 +1,5 @@
-import { getFirestore, collection, getDocs, query, orderBy, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDXY7DEhinmbYLQ7zBRgEUJoc_eRsp-aNU",
@@ -10,68 +10,48 @@ const firebaseConfig = {
   appId: "1:511471364499:web:fbc7d813e9b8d28cf32066"
 };
 
-const app = initializeApp(firebaseConfig);
-
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const container = document.getElementById("chapter-container");
 
 function formatText(text) {
-  return text
-    .split("\n")
-    .map(line => `<p>${line.trim()}</p>`)
-    .join("");
+  return text.split("\n").map(line => `<p>${line.trim()}</p>`).join("");
 }
 
 async function loadPremiumStory() {
   const snapshot = await getDocs(collection(db, "premiumStory"));
-  const grouped = {};
+  const stories = [];
 
   snapshot.forEach(docSnap => {
-    const data = docSnap.data();
-    const { season, chapter, content, title } = data;
-
-    if (!grouped[season]) grouped[season] = [];
-    grouped[season].push({ chapter, content, title });
+    stories.push({ id: docSnap.id, ...docSnap.data() });
   });
 
-  // Sort seasons alphabetically or chronologically if desired
-  Object.entries(grouped).forEach(([season, chapters]) => {
-    chapters.sort((a, b) => a.chapter.localeCompare(b.chapter, undefined, { numeric: true }));
+  // Group by season
+  const grouped = {};
+  for (const story of stories) {
+    const season = story.season || "Unknown Season";
+    if (!grouped[season]) grouped[season] = [];
+    grouped[season].push(story);
+  }
 
+  // Render
+  Object.entries(grouped).forEach(([season, chapters]) => {
     const details = document.createElement("details");
     const summary = document.createElement("summary");
     summary.textContent = season;
     details.appendChild(summary);
 
-    const contentWrapper = document.createElement("div");
-    contentWrapper.className = "content-wrapper";
+    chapters.sort((a, b) => a.chapter.localeCompare(b.chapter));
 
-    chapters.forEach(({ chapter, content, title }) => {
-      const entry = document.createElement("div");
-      entry.className = "lore-entry"; // reuse lore styles
-
-      const header = document.createElement("div");
-      header.className = "lore-title";
-      header.textContent = `${chapter}: ${title}`;
-
-      const body = document.createElement("div");
-      body.className = "lore-details";
-      body.innerHTML = formatText(content);
-
-      // Expand/collapse individual entries
-      header.addEventListener("click", () => {
-        entry.classList.toggle("open");
-        body.classList.toggle("hidden");
-      });
-
-      body.classList.add("hidden");
-
-      entry.appendChild(header);
-      entry.appendChild(body);
-      contentWrapper.appendChild(entry);
+    chapters.forEach(({ chapter, title, content }) => {
+      const div = document.createElement("div");
+      div.className = "chapter-body lore-entry";
+      div.innerHTML = `<h3>${chapter}: ${title}</h3>${formatText(content)}`;
+      details.appendChild(div);
     });
 
-    details.appendChild(contentWrapper);
     container.appendChild(details);
   });
 }
+
+loadPremiumStory();
