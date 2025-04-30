@@ -101,7 +101,7 @@ function showCountdownToMidnightUTC() {
   setInterval(updateCountdown, 1000);
 }
 
-unction showWelcomeModalOncePerDay() {
+function showWelcomeModalOncePerDay() {
   const todayKey = `welcome-modal-shown-${new Date().toISOString().slice(0, 10)}`;
   const modal = document.getElementById("welcome-modal");
   const closeBtn = document.getElementById("close-welcome");
