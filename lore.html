@@ -85,6 +85,22 @@
   (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
 
+    <script>
+  document.getElementById("hamburger-icon").addEventListener("click", function () {
+    const navLinks = document.querySelector(".nav-links");
+    const logo = document.querySelector(".logo");
+
+    navLinks.classList.toggle("active");
+
+    // Hide or show logo depending on menu state
+    if (navLinks.classList.contains("active")) {
+      logo.style.display = "none";
+    } else {
+      logo.style.display = "block";
+    }
+  });
+</script>
+
 <script type="module" src="lore.js"></script>
 
 <script type="module" src="./hide-ads.js"></script>
