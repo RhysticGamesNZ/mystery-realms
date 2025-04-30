@@ -101,6 +101,31 @@ function showCountdownToMidnightUTC() {
   setInterval(updateCountdown, 1000);
 }
 
+unction showWelcomeModalOncePerDay() {
+  const todayKey = `welcome-modal-shown-${new Date().toISOString().slice(0, 10)}`;
+  const modal = document.getElementById("welcome-modal");
+  const closeBtn = document.getElementById("close-welcome");
+
+  if (!modal || !closeBtn) return;
+
+  if (!localStorage.getItem(todayKey)) {
+    modal.classList.add("show");
+
+    closeBtn.addEventListener("click", () => {
+      modal.classList.remove("show");
+      localStorage.setItem(todayKey, "true");
+    });
+
+    // Optional: click outside to close
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.classList.remove("show");
+        localStorage.setItem(todayKey, "true");
+      }
+    });
+  }
+}
+
 function renderMystery(data, user) {
   document.getElementById("mystery-title").textContent = data.title;
   document.getElementById("mystery-premise").innerHTML = formatText(data.premise);
@@ -180,6 +205,7 @@ function renderMystery(data, user) {
       showCountdownToMidnightUTC();
     };
   }
+  showWelcomeModalOncePerDay();
 }
 
 onAuthStateChanged(auth, (user) => {
