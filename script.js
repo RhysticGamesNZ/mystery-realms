@@ -56,7 +56,7 @@ async function loadTodayMystery(user) {
     }
 
     console.log("✅ Document fetched:", docId);
-    renderMystery(docSnap.data());
+    renderMystery(docSnap.data(), user);
   } else {
     // Load today's mystery if no docId is provided
     const today = new Date();
@@ -74,7 +74,7 @@ async function loadTodayMystery(user) {
 
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach((doc) => {
-      renderMystery(doc.data());
+      renderMystery(doc.data(), user);
     });
   }
 }
@@ -101,7 +101,7 @@ function showCountdownToMidnightUTC() {
   setInterval(updateCountdown, 1000);
 }
 
-function renderMystery(data) {
+function renderMystery(data, user) {
   document.getElementById("mystery-title").textContent = data.title;
   document.getElementById("mystery-premise").innerHTML = formatText(data.premise);
 
