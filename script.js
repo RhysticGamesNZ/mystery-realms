@@ -23,6 +23,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
 function formatText(text) {
   return text.split("\n").map(line => `<p>${line.trim()}</p>`).join("");
