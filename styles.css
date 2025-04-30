@@ -392,6 +392,7 @@ fieldset {
 #forgot-password-link {
   font-size: 0.9rem;
   color: #5a3910;
+  text-align: center;
   text-decoration: underline;
   cursor: pointer;
 }
