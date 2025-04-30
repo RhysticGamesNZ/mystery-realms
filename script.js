@@ -135,11 +135,11 @@ function renderMystery(data) {
       }));
 
       
-      if (isCorrect) {
+      if (isCorrect && user) {
       await validateStreak(db, user.uid);
       await trackCorrectGuess(db, user.uid);
       await trackMysterySolved(db, user.uid);
-      } else {
+      } else if (!isCorrect && user) {
       await trackIncorrectGuess(db, user.uid);
       }
 
@@ -152,6 +152,9 @@ function renderMystery(data) {
         <p><em>${formatText(data.explanation)}</em></p>
         <p><em><strong>Archive Note:</strong> ${data.archive_note}</em></p>
       `;
+      if (!user) {
+          resultDiv.innerHTML += `<p><em><a href="stats.html">Log in to start tracking your streak →</a></em></p>`;
+      }
     };
   }
 }
@@ -160,6 +163,7 @@ onAuthStateChanged(auth, (user) => {
   if (user) {
     loadTodayMystery(user);
   } else {
-    console.warn("🔒 User not authenticated.");
+    console.warn("🔓 No user signed in. Loading public mystery.");
+    loadTodayMystery(null); // allow anonymous access
   }
 });
