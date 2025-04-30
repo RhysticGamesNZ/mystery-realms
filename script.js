@@ -1,4 +1,4 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import { getFirestore, collection, query, where, getDocs, getDoc, doc, Timestamp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 import {
   getAuth,
@@ -20,6 +20,9 @@ const firebaseConfig = {
   appId: "1:511471364499:web:fbc7d813e9b8d28cf32066",
   measurementId: "G-ELW3HVV36V"
 };
+
+// ✅ FIX: initialize Firebase app before using it
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 const auth = getAuth(app);
