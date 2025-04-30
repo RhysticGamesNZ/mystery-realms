@@ -99,19 +99,31 @@ onAuthStateChanged(auth, async (user) => {
     profileContainer.style.display = "block";
 
     document.getElementById("user-email").textContent = user.email;
+    
+   const userRef = doc(db, "users", user.uid);
+const userDoc = await getDoc(userRef);
 
-    const userDoc = await getDoc(doc(db, "users", user.uid));
-    if (userDoc.exists()) {
-      const data = userDoc.data();
-      document.getElementById("user-level").textContent = data.level ?? "Seeker";
-      document.getElementById("user-premium").textContent = data.premium ? "Yes" : "No";
-      document.getElementById("user-streak").textContent = data.streak ?? 0;
-      document.getElementById("user-correct").textContent = data.correct ?? 0;
-      document.getElementById("user-incorrect").textContent = data.incorrect ?? 0;
-      document.getElementById("user-lore-read").textContent = data.loreRead ?? 0;
-    } else {
-      document.getElementById("user-premium").textContent = "Unknown";
-    }
+if (!userDoc.exists()) {
+  await setDoc(userRef, {
+    email: user.email,
+    premium: false,
+    level: "Apprentice Seeker",
+    streak: 0,
+    correct: 0,
+    incorrect: 0,
+    loreRead: 0,
+    lastSolved: null
+  });
+}
+
+const data = (await getDoc(userRef)).data();
+document.getElementById("user-level").textContent = data.level ?? "Seeker";
+document.getElementById("user-premium").textContent = data.premium ? "Yes" : "No";
+document.getElementById("user-streak").textContent = data.streak ?? 0;
+document.getElementById("user-correct").textContent = data.correct ?? 0;
+document.getElementById("user-incorrect").textContent = data.incorrect ?? 0;
+document.getElementById("user-lore-read").textContent = data.loreRead ?? 0;
+
   } else {
     authContainer.style.display = "block";
     profileContainer.style.display = "none";
