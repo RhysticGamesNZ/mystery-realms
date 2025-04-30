@@ -193,20 +193,23 @@ function renderMystery(data, user) {
       // Hide form & show result
       choicesFieldset.style.display = "none";
       form.style.display = "none";
-      resultDiv.innerHTML = `
+    resultDiv.innerHTML = `
+        <div class="result-text">
         <p><strong>${isCorrect ? 'Correct!' : 'Incorrect.'}</strong></p>
         <p><strong>Answer:</strong> ${formatText(data.answer)}</p>
         <p><em>${formatText(data.explanation)}</em></p>
         <p><em><strong>Archive Note:</strong> ${data.archive_note}</em></p>
-      `;
+        </div>
+              `;
+        showCountdownToMidnightUTC();
       if (!user) {
           resultDiv.innerHTML += `<p><em><a href="stats.html">Log in to start tracking your streak →</a></em></p>`;
       }
-      showCountdownToMidnightUTC();
     };
   }
-  showWelcomeModalOncePerDay();
 }
+
+showWelcomeModalOncePerDay();
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
