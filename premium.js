@@ -184,10 +184,6 @@ checkoutButton?.addEventListener('click', async () => {
 
 const container = document.getElementById("chapter-container");
 
-function formatText(text) {
-  return text.split("\n").map(p => `<p>${p.trim()}</p>`).join("");
-}
-
 async function loadPremiumStory() {
   const snapshot = await getDocs(collection(db, "premiumStory"));
   const chapters = [];
