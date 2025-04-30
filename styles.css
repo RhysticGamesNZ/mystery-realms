@@ -727,3 +727,78 @@ summary:hover {
     box-shadow: 0 0 15px rgba(109, 77, 41, 0.5);
   }
 }
+
+.featured-premium-card {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border: 2px solid #c8b178;
+  border-radius: 12px;
+  background: radial-gradient(circle, #fefae0 0%, #f5e1b9 100%);
+  box-shadow: 0 0 25px rgba(255, 214, 134, 0.6), 0 0 40px rgba(255, 229, 180, 0.4);
+  text-align: center;
+  animation: glowPulse 3s ease-in-out infinite;
+}
+
+.featured-premium-card h2 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  color: #5c3e1c;
+}
+
+.featured-premium-card p {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: #3b2a14;
+}
+
+.story-button {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: #6c471f;
+  color: #fff3dc;
+  font-weight: bold;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.story-button:hover {
+  background-color: #9b6c35;
+  transform: scale(1.05);
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(255, 229, 180, 0.3), 0 0 30px rgba(255, 214, 134, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 229, 180, 0.6), 0 0 50px rgba(255, 214, 134, 0.8);
+  }
+}
+
+.chapter-archive {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.chapter-archive details {
+  margin-bottom: 1.5rem;
+  border: 2px solid #c1b192;
+  border-radius: 10px;
+  background: #f9f5e9;
+  padding: 1rem;
+}
+
+.chapter-archive summary {
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: #4e3a2f;
+}
+
+.chapter-body p {
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
