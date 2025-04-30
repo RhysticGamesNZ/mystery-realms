@@ -15,6 +15,13 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const container = document.getElementById("chapter-container");
 
+function formatText(text) {
+  return text
+    .split("\n")
+    .map(line => `<p>${line.trim()}</p>`)
+    .join("");
+}
+
 async function loadPremiumStory() {
   const snapshot = await getDocs(collection(db, "premiumStory"));
   const chapters = [];
