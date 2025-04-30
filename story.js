@@ -24,31 +24,54 @@ function formatText(text) {
 
 async function loadPremiumStory() {
   const snapshot = await getDocs(collection(db, "premiumStory"));
-  const chapters = [];
+  const grouped = {};
 
   snapshot.forEach(docSnap => {
-    chapters.push({
-      id: docSnap.id,
-      ...docSnap.data()
-    });
+    const data = docSnap.data();
+    const { season, chapter, content, title } = data;
+
+    if (!grouped[season]) grouped[season] = [];
+    grouped[season].push({ chapter, content, title });
   });
 
-  // Optional: sort by doc ID (e.g. prologue, chapter-one, chapter-two)
-  chapters.sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
+  // Sort seasons alphabetically or chronologically if desired
+  Object.entries(grouped).forEach(([season, chapters]) => {
+    chapters.sort((a, b) => a.chapter.localeCompare(b.chapter, undefined, { numeric: true }));
 
-  chapters.forEach(({ title, content }) => {
     const details = document.createElement("details");
     const summary = document.createElement("summary");
-    summary.textContent = title;
-
-    const body = document.createElement("div");
-    body.className = "chapter-body";
-    body.innerHTML = formatText(content);
-
+    summary.textContent = season;
     details.appendChild(summary);
-    details.appendChild(body);
+
+    const contentWrapper = document.createElement("div");
+    contentWrapper.className = "content-wrapper";
+
+    chapters.forEach(({ chapter, content, title }) => {
+      const entry = document.createElement("div");
+      entry.className = "lore-entry"; // reuse lore styles
+
+      const header = document.createElement("div");
+      header.className = "lore-title";
+      header.textContent = `${chapter}: ${title}`;
+
+      const body = document.createElement("div");
+      body.className = "lore-details";
+      body.innerHTML = formatText(content);
+
+      // Expand/collapse individual entries
+      header.addEventListener("click", () => {
+        entry.classList.toggle("open");
+        body.classList.toggle("hidden");
+      });
+
+      body.classList.add("hidden");
+
+      entry.appendChild(header);
+      entry.appendChild(body);
+      contentWrapper.appendChild(entry);
+    });
+
+    details.appendChild(contentWrapper);
     container.appendChild(details);
   });
 }
-
-loadPremiumStory();
