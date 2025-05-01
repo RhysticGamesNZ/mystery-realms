@@ -777,28 +777,50 @@ summary:hover {
   }
 }
 
-.chapter-archive {
-  max-width: 800px;
+#chapter-container {
+  flex: 1 1 100%;
+  max-width: 1000px;
+  width: 100%;
   margin: 2rem auto;
   padding: 1rem;
+  background-color: rgba(247, 240, 224, 0.95);
 }
 
-.chapter-archive details {
-  margin-bottom: 1.5rem;
-  border: 2px solid #c1b192;
+#chapter-container details {
+  background: #f9f3df;
+  border: 2px solid #b59a74;
   border-radius: 10px;
-  background: #f9f5e9;
-  padding: 1rem;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
 }
 
-.chapter-archive summary {
-  font-size: 1.5rem;
+#chapter-container summary {
   font-weight: bold;
+  font-size: 1.3rem;
+  padding: 1rem;
   cursor: pointer;
-  color: #4e3a2f;
+  color: #5a3910;
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chapter-entry::after {
+  content: '+';
+  float: right;
+  font-weight: normal;
+  transition: transform 0.3s ease;
+}
+
+.chapter-body.open .chapter-entry::after {
+  content: '−';
+  float: right;
 }
 
 .chapter-body p {
-  margin-bottom: 1rem;
-  line-height: 1.6;
+  padding: 0.5rem 0 0 0;
+  color: #2f1e0e;
+  animation: fadeIn 0.25s ease-in;
 }
