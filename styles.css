@@ -779,6 +779,10 @@ summary:hover {
 
 /* PREMIUM STORY: Season & Chapter grouping */
 
+#chapter-container {
+  width: 1000px !important
+}
+
 #chapter-container .season-group {
   background: #f9f3df;
   border: 2px solid #b59a74;
