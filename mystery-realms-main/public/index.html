@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel = "icon" href = "./assets/favicon.ico" type = "image/x-icon">
+  <link rel="sitemap" type="application/xml" title="Sitemap" href="sitemap.xml">
+  <title>Mystery Realms – Solve Dark Fantasy Mysteries Daily in Gloomark</title>
+  <meta name = "description" content = "Enter Gloomark, a cursed city of magic and memory. Solve a new interactive mystery every day. Uncover secrets. Survive truth. Become a Seeker.">
+  <meta name = "keywords" content = "mystery, puzzle, interactive fiction, daily challenge, magic, noir, game">
+  <meta name="author" content="Rhystic Games">
+  <meta name="google-adsense-account" content="ca-pub-2795399173885321">
+  <meta name='admaven-placement' content=BqdYFqHkH>
+
+<!-- Open Graph -->
+  <meta property="og:title" content="Mystery Realms – Daily Magical Mysteries">
+  <meta property="og:description" content="A daily enigma awaits. Dive into a magic-infused world of deduction.">
+  <meta property="og:url" content="https://www.mysteryrealms.com">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mystery Realms">
+  <meta property="og:image" content="">
+
+<!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Mystery Realms – Daily Magical Mysteries">
+  <meta name="twitter:description" content="A daily enigma awaits. Dive into a magic-infused world of deduction.">
+  <meta name="twitter:image" content="">
+  
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&display=swap&family=Cormorant+Garamond&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+ </head>
+<body>
+<div id="site-content">
+ <header class="site-header">
+  <div class="header-container">
+    <div class="logo">
+      <img src="./assets/logo.png" alt="Mystery Realms Logo" />
+    </div>
+    <nav class="nav-links" aria-label = "Main Navigation">
+      <a href="index.html">Daily Mystery</a>
+      <a href="past.html">Archive</a>
+      <a href="lore.html">Lore & Codex</a>
+      <a href="stats.html">Profile</a>
+      <a href="premium.html">Premium</a>
+    </nav>
+     <div class="hamburger" id="hamburger-icon">
+      &#9776;
+    </div>
+  </div>
+</header>
+  
+<div class="page-wrapper">
+<div id="ad-left" class="ad-left">
+  <ins class="adsbygoogle"
+       style="display:block;width:120px;height:600px"
+       data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+       data-ad-slot="1111111111"></ins>
+</div>
+
+ <main>
+    <section id="mystery" class="card parchment">
+      <h2 id="mystery-title">Loading...</h2>
+      <p id="mystery-premise"></p><br>
+      <h3>What we know...</h3>
+      <ul id="mystery-clues"></ul><br>
+      <h3>What happened?</h3>
+      <form id="mystery-form">
+        <fieldset id="mystery-choices"></fieldset>
+        <button type="submit">Submit Answer</button>
+      </form>
+      <div id="mystery-result"></div>
+      <div id="next-mystery-timer" style="display: none; text-align: center; margin-top: 2rem;">
+  <p><strong>Next mystery in: <span id="countdown"></span></strong></p>
+</div>
+    </section>
+
+    <section class="premium parchment" id="premium-cta">
+      <h2 style="color:#f7f0e0;">Take the Obscura Pact</h2>
+      <p>Unlock deeper mysteries every Monday. Premium members only.</p>
+      <button href="premium.html">Subscribe Now</button>
+    </section>
+
+  </main>
+
+  <div id="ad-right" class="ad-right">
+  <ins class="adsbygoogle"
+       style="display:block;width:120px;height:600px"
+       data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+       data-ad-slot="2222222222"></ins>
+</div>
+</div>
+
+  <div id="ad-bottom" class="ad-bottom">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+       data-ad-slot="3333333333"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+</div>
+ <footer class="footer">
+    <p>&copy; Rhystic Games 2025</p>
+    <a href='https://ko-fi.com/G2G81E6E2Y' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi1.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+  </footer>
+</div>
+<div id="welcome-modal" class="modal-overlay">
+  <div class="modal-content parchment">
+    <h2>Welcome to Gloomark</h2>
+    <div class="modal-text">
+      The city is old, cracked, and bleeding magic. <br>
+      It forgets what it should remember—and remembers what it shouldn’t.<br><br>
+      You are a <strong>Seeker</strong>.<br>
+      You don’t answer to the Watch. You don’t belong to the Ministry.<br><br>
+      Each day, a new mystery arrives. Your choices shape what Gloomark remembers—and what it loses.<br>
+      Take on the role of a Seeker: a rogue investigator working outside the law, beyond the Ministry, and deep beneath the surface of what the city pretends is true.<br><br>
+      Today’s case is waiting.
+    </div>
+    <button id="close-welcome">Begin</button>
+  </div>
+</div>
+  
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({});
+  (adsbygoogle = window.adsbygoogle || []).push({});
+  (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+  
+<script>
+  document.getElementById("hamburger-icon").addEventListener("click", function () {
+    const navLinks = document.querySelector(".nav-links");
+    const logo = document.querySelector(".logo");
+
+    navLinks.classList.toggle("active");
+
+    // Hide or show logo depending on menu state
+    if (navLinks.classList.contains("active")) {
+      logo.style.display = "none";
+    } else {
+      logo.style.display = "block";
+    }
+  });
+</script>
+<script type="module" src="./hide-ads.js"></script>
+<script type="module" src="script.js"></script>
+</body>
+</html>

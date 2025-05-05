@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" href="./assets/favicon.ico" type="image/x-icon">
+  <title>Mystery Realms Premium – Deeper Mysteries, Player-Driven Storylines</title>
+  <meta name = "description" content = "Unlock exclusive weekly mysteries, forbidden lore, and vote on the future of Gloomark. Join Mystery Realms Premium and shape what survives.">
+  <meta name="keywords" content="mystery, puzzle, interactive fiction, daily challenge, magic, noir, game">
+  <meta name="author" content="Rhystic Games">
+  <meta name="google-adsense-account" content="ca-pub-2795399173885321">
+  <meta name='admaven-placement' content=BqdYFqHkH>
+
+<!-- Open Graph -->
+<meta property="og:title" content="Mystery Realms – Daily Magical Mysteries">
+<meta property="og:description" content="A daily enigma awaits. Dive into a magic-infused world of deduction.">
+<meta property="og:url" content="https://www.mysteryrealms.com">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Mystery Realms">
+<meta property="og:image" content="https://rhysticgamesnz.github.io/mystery-realms/logo.png">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mystery Realms – Daily Magical Mysteries">
+<meta name="twitter:description" content="A daily enigma awaits. Dive into a magic-infused world of deduction.">
+<meta name="twitter:image" content="">
+
+  <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English&display=swap&family=Cormorant+Garamond&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div id="site-content">
+
+  <header class="site-header">
+    <div class="header-container">
+      <div class="logo">
+        <img src="./assets/logo.png" alt="Mystery Realms Logo" href="./index.html"/>
+      </div>
+      <nav class="nav-links" aria-label = "Main Navigation">
+        <a href="index.html">Daily Mystery</a>
+        <a href="past.html">Archive</a>
+        <a href="lore.html">Lore & Codex</a>
+        <a href="stats.html">Profile</a>
+        <a href="premium.html">Premium</a>
+      </nav>
+      <div class="hamburger" id="hamburger-icon">&#9776;</div>
+    </div>
+  </header>
+
+  <div class="page-wrapper">
+    <div id="ad-left" class="ad-left">
+      <ins class="adsbygoogle" style="display:block;width:120px;height:600px" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="1111111111"></ins>
+    </div>
+
+<!-- Checkout view (default if not premium) -->
+<main class="card parchment" id="premium-checkout" style="display: none;">
+  <h2 class="header1" style="text-align: center;">Take the Obscura Pact</h2>
+  <div class="premium-flex">
+    <p class="prem-join">Unlock the deeper layers of Gloomark. <br>
+      These aren’t just more cases. They’re the ones the Archive doesn’t want opened.<br>
+    As a Premium Seeker, you gain access to:</p>
+    <ul class="prem-list">
+      <li><img class="stat-image" src="./assets/candle.png" alt="candle"> Weekly Premium Mysteries every Monday</li>
+      <li><img class="stat-image" src="./assets/old-book.png" alt="old book"> Decide where the story will go next!</li>
+      <li><img class="stat-image" src="./assets/ancient-scroll.png" alt="ancient scroll"> Early access to lore expansions</li>
+      <li><img class="stat-image" src="./assets/ad-banner.png" alt="ad free"> No ads across the site</li>
+    </ul>
+  </div>
+  <div style="text-align: center;">
+    <button id="checkout-button" class="premium-button">Subscribe Now</button>
+  </div>
+</main>
+
+<!-- Premium content view (if subscribed) -->
+<main class="card parchment" id="premium-content" style="display: none;">
+  <section id="premium-mystery">
+    <h2 id="mystery-title">Welcome, Oath taker...</h2>
+    <p id="mystery-premise"></p>
+    <h3>What has been discovered...</h3>
+    <ul id="mystery-clues"></ul>
+    <form id="mystery-form">
+      <h4>What decision will you make?</h4>
+      <fieldset id="mystery-choices"></fieldset>
+      <button type="submit">Submit Decision</button>
+    </form>
+    <div id="mystery-result"></div>
+  </section>
+</main>
+
+    <div id="ad-right" class="ad-right">
+      <ins class="adsbygoogle" style="display:block;width:120px;height:600px" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="2222222222"></ins>
+    </div>
+  </div>
+
+  <div id="ad-bottom" class="ad-bottom">
+    <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="3333333333" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; Rhystic Games 2025</p>
+    <a href='https://ko-fi.com/G2G81E6E2Y' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi1.png?v=6' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+  </footer>
+
+</div>
+
+<script type="module" src="./premium.js"></script>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({});
+  (adsbygoogle = window.adsbygoogle || []).push({});
+  (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+
+<script src="https://js.stripe.com/v3/"></script>
+
+<script>
+  document.getElementById("hamburger-icon").addEventListener("click", function () {
+    const navLinks = document.querySelector(".nav-links");
+    const logo = document.querySelector(".logo");
+    navLinks.classList.toggle("active");
+    logo.style.display = navLinks.classList.contains("active") ? "none" : "block";
+  });
+</script>
+
+<script type="module" src="./hide-ads.js"></script>
+
+</body>
+</html>
