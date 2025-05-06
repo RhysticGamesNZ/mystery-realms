@@ -808,11 +808,6 @@ summary:hover {
     margin-bottom: 1rem;
   }
 
-  .header-container {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
   .logo img {
     height: 80px;
     margin-bottom: 0.5rem;
