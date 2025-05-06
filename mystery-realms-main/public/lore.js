@@ -22,83 +22,154 @@ function formatText(text) {
   return text.split("\n").map(line => `<p>${line.trim()}</p>`).join("");
 }
 
-async function loadLore(user) {
-  const container = document.getElementById("lore-container");
-  const readSet = new Set(); // Prevent multiple counts per entry this session
+function debounce(func, delay) {
+  let timer;
+  return function () {
+    clearTimeout(timer);
+    timer = setTimeout(func, delay);
+  };
+}
+
+async function loadDesktopLayout(user) {
+  const categoryList = document.getElementById("category-list");
+  const entryList = document.getElementById("entry-list");
+  const content = document.getElementById("lore-content");
+  const readSet = new Set();
+
+  categoryList.innerHTML = "<h2>Loading categories...</h2>";
+  categoryList.style.display = "block";
+  entryList.style.display = "none";
 
   try {
-    const snapshot = await getDocs(collection(db, "lore"));
-    const loreByCategory = {};
+    const categorySnapshot = await getDocs(collection(db, "lore"));
+    categoryList.innerHTML = "";
 
-    snapshot.forEach(docSnap => {
-      const data = docSnap.data();
-      const category = data.category || "Other";
-      if (!loreByCategory[category]) {
-        loreByCategory[category] = [];
-      }
-      loreByCategory[category].push({
-        title: data.title,
-        details: data.details
-      });
-    });
+    categorySnapshot.forEach((categoryDoc) => {
+      const categoryId = categoryDoc.id;
+      const categoryDiv = document.createElement("div");
+      categoryDiv.className = "category";
+      categoryDiv.textContent = categoryId;
+      categoryList.appendChild(categoryDiv);
 
-    const sortedCategories = Object.keys(loreByCategory).sort();
+      categoryDiv.addEventListener("click", async () => {
+        categoryList.style.display = "none";
+        entryList.innerHTML = "";
+        entryList.style.display = "block";
 
-    sortedCategories.forEach(categoryName => {
-      const categoryDetails = document.createElement("details");
-      const categorySummary = document.createElement("summary");
-      categorySummary.textContent = categoryName;
-      categoryDetails.appendChild(categorySummary);
+        const backButton = document.createElement("div");
+        backButton.id = "back-button";
+        backButton.textContent = "← Back to Categories";
+        entryList.appendChild(backButton);
 
-      const innerWrapper = document.createElement("div");
-      innerWrapper.className = "content-wrapper";
+        backButton.addEventListener("click", () => {
+          categoryList.style.display = "block";
+          entryList.style.display = "none";
+        });
 
-      loreByCategory[categoryName].forEach(entry => {
-        const entryWrapper = document.createElement("div");
-        entryWrapper.className = "lore-entry";
+        const entriesSnapshot = await getDocs(collection(db, "lore", categoryId, "entries"));
 
-        const entryHeader = document.createElement("div");
-        entryHeader.className = "lore-title";
-        entryHeader.textContent = entry.title;
+        entriesSnapshot.forEach(entryDoc => {
+          const entry = entryDoc.data();
+          const entryDiv = document.createElement("div");
+          entryDiv.className = "entry";
+          entryDiv.textContent = entry.title;
 
-        const entryContent = document.createElement("div");
-        entryContent.className = "lore-details hidden";
-        entryContent.innerHTML = formatText(entry.details);
-
-        entryHeader.addEventListener("click", async () => {
-          innerWrapper.querySelectorAll(".lore-entry").forEach(entryEl => {
-            if (entryEl !== entryWrapper) {
-              entryEl.classList.remove("open");
-              entryEl.querySelector(".lore-details").classList.add("hidden");
+          entryDiv.addEventListener("click", async () => {
+            content.innerHTML = `<h2>${entry.title}</h2>${formatText(entry.details)}`;
+            const loreKey = `${categoryId}-${entry.title}`;
+            if (user && !readSet.has(loreKey)) {
+              await trackLoreRead(db, user.uid);
+              readSet.add(loreKey);
             }
           });
 
-          entryWrapper.classList.toggle("open");
-          entryContent.classList.toggle("hidden");
-
-          // 🧠 Track lore read ONCE per session per title
-          const loreKey = `${categoryName}-${entry.title}`;
-          if (user && !readSet.has(loreKey)) {
-            await trackLoreRead(db, user.uid);
-            readSet.add(loreKey);
-          }
+          entryList.appendChild(entryDiv);
         });
-
-        entryWrapper.appendChild(entryHeader);
-        entryWrapper.appendChild(entryContent);
-        innerWrapper.appendChild(entryWrapper);
       });
-
-      categoryDetails.appendChild(innerWrapper);
-      container.appendChild(categoryDetails);
     });
-
-  } catch (error) {
-    console.error("Error loading lore:", error);
+  } catch (err) {
+    console.error("Failed to load lore:", err);
+    categoryList.innerHTML = "<p>Failed to load lore.</p>";
   }
 }
 
-// 🔐 Auth check before loading lore
+async function loadMobileLayout(user) {
+  const container = document.getElementById("lore-container");
+  const content = document.getElementById("lore-content"); // Optional if used elsewhere
+  container.innerHTML = "";
+  const readSet = new Set();
+
+  // Show categories
+  async function renderCategories() {
+    container.innerHTML = "<h2>Categories</h2>";
+
+    const snapshot = await getDocs(collection(db, "lore"));
+    snapshot.forEach(doc => {
+      const categoryId = doc.id;
+      const div = document.createElement("div");
+      div.className = "category";
+      div.textContent = categoryId;
+      div.onclick = () => renderEntries(categoryId);
+      container.appendChild(div);
+    });
+  }
+
+  // Show entries for a category
+  async function renderEntries(categoryId) {
+    container.innerHTML = `
+      <div class="back-button" id="back-to-categories">← Back to Categories</div>
+      <h2>${categoryId}</h2>
+    `;
+
+    const backBtn = container.querySelector("#back-to-categories");
+    backBtn.onclick = renderCategories;
+
+    const snapshot = await getDocs(collection(db, "lore", categoryId, "entries"));
+    snapshot.forEach(doc => {
+      const entry = doc.data();
+      const div = document.createElement("div");
+      div.className = "entry";
+      div.textContent = entry.title;
+      div.onclick = () => renderDetails(categoryId, entry);
+      container.appendChild(div);
+    });
+  }
+
+  // Show full entry
+  function renderDetails(categoryId, entry) {
+    container.innerHTML = `
+      <div class="back-button" id="back-to-entries">← Back to ${categoryId}</div>
+      <h2>${entry.title}</h2>
+      ${formatText(entry.details)}
+    `;
+
+    document.getElementById("back-to-entries").onclick = () => renderEntries(categoryId);
+
+    const loreKey = `${categoryId}-${entry.title}`;
+    if (user && !readSet.has(loreKey)) {
+      trackLoreRead(db, user.uid);
+      readSet.add(loreKey);
+    }
+  }
+
+  await renderCategories();
+}
+
+function determineLayout(user) {
+  const isMobile = window.innerWidth < 768;
+  if (isMobile) {
+    loadMobileLayout(user);
+  } else {
+    loadDesktopLayout(user);
+  }
+}
+
+let currentUser = null;
 onAuthStateChanged(auth, (user) => {
-  loadLore(user);
+  currentUser = user;
+  determineLayout(user);
 });
+
+window.addEventListener("resize", debounce(() => {
+  determineLayout(currentUser);
+}, 300));
